@@ -86,3 +86,23 @@ export type InvoiceForm = {
   amount: number;
   status: 'pending' | 'paid';
 };
+
+export type CustomerForm = {
+  id: string;
+  name: string;
+  email: string;
+  image_url: string;
+};
+
+export type FarmersTableType = {
+  id: string;
+  name: string;
+  phone_number: string;
+  email: string;
+  id_number: string;
+  city: string;
+  district: string;
+  sector: string;
+  village: string;
+  cell: string;
+};

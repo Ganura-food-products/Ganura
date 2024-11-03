@@ -20,8 +20,8 @@ const links = [
   },
   { name: 'Customers', href: '/dashboard/customers', icon: UserGroupIcon },
   { name: 'Suppliers', href: '/dashboard/farmers', icon: UserIcon },
-  { name: 'Team Leaders', href: '/dashboard/farmers', icon: UserIcon },
-  { name: 'Supervisors', href: '/dashboard/farmers', icon: UserIcon },
+  { name: 'Team Leaders', href: '/dashboard/leaders', icon: UserIcon },
+  { name: 'Supervisors', href: '/dashboard/supervisors', icon: UserIcon },
   { name: 'Settings', href: '/dashboard/settings', icon: CogIcon },
   { name: 'users', href: '/dashboard/users', icon: UserGroupIcon },
   {
