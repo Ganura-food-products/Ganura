@@ -6,6 +6,7 @@ import {
   InvoicesTable,
   LatestInvoiceRaw,
   Revenue,
+  FarmersTableType,
 } from './definitions';
 import { formatCurrency } from './utils';
 
@@ -86,7 +87,7 @@ export async function fetchCardData() {
 const ITEMS_PER_PAGE = 6;
 export async function fetchFilteredInvoices(
   query: string,
-  currentPage: number,
+  currentPage: number
 ) {
   const offset = (currentPage - 1) * ITEMS_PER_PAGE;
 
@@ -183,7 +184,10 @@ export async function fetchCustomers() {
   }
 }
 
-export async function fetchFilteredCustomers(query: string) {
+export async function fetchFilteredCustomers(
+  query: string,
+  currentPage: number
+) {
   try {
     const data = await sql<CustomersTableType>`
 		SELECT
@@ -213,5 +217,21 @@ export async function fetchFilteredCustomers(query: string) {
   } catch (err) {
     console.error('Database Error:', err);
     throw new Error('Failed to fetch customer table.');
+  }
+}
+
+export async function fetchFarmers() {
+  try {
+    const data = await sql<FarmersTableType>`
+      SELECT *
+      FROM farmers
+      ORDER BY name ASC
+    `;
+
+    const farmers = data.rows;
+    return farmers;
+  } catch (err) {
+    console.error('Database Error:', err);
+    throw new Error('Failed to fetch farmers table.');
   }
 }

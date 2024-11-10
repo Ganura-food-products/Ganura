@@ -10,7 +10,7 @@ import { Metadata } from 'next';
 import { CreateCustomer } from '@/app/ui/customers/buttons';
 
 export const metadata: Metadata = {
-  title: 'Invoices',
+  title: 'Supervisors',
 };
 
 export default async function Page(props: {
