@@ -220,16 +220,10 @@ export async function fetchFilteredCustomers(
   }
 }
 
-export async function fetchFarmerTable() {
+export async function fetchFarmers() {
   try {
     const data = await sql<FarmersTableType>`
-      SELECT
-        id,
-        name,
-        phone_number,
-        email,
-        id_number,
-        city
+      SELECT *
       FROM farmers
       ORDER BY name ASC
     `;

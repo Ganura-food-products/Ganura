@@ -21,8 +21,23 @@ const FormSchema = z.object({
   date: z.string(),
 });
 
+const FarmerSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  id_number: z.string(),
+  phone_number: z.string(),
+  city: z.string(),
+  district: z.string(),
+  sector: z.string(),
+  cell: z.string(),
+  village: z.string(),
+  team_leader_id: z.string(),
+  date: z.string(),
+});
+
 const CreateInvoice = FormSchema.omit({ id: true, date: true });
 const UpdateInvoice = FormSchema.omit({ id: true, date: true });
+const CreateFarmer = FarmerSchema.omit({ id: true, date: true });
 
 export type State = {
   errors?: {
@@ -135,3 +150,44 @@ export async function authenticate(
     throw error;
   }
 }
+
+export async function createFarmer(prevState: State, formData: FormData) {
+  const validatedFields = CreateFarmer.safeParse({
+    // id: write function to generate random uuid
+    id: '1234',
+    name: formData.get('name'),
+    id_number: formData.get('id_number'),
+    phone_number: formData.get('phone_number'),
+    city: formData.get('city'),
+    district: formData.get('district'),
+    sector: formData.get('sector'),
+    cell: formData.get('cell'),
+    village: formData.get('village'),
+    team_leader_id: formData.get('team_leader_id'),
+  });
+
+  if (!validatedFields.success) {
+    return {
+      errors: validatedFields.error.flatten().fieldErrors,
+      message: 'Missing Fields. Failed to Create Farmer.',
+    };
+  }
+
+  const { name, id_number, phone_number, city, district, sector, cell, village, team_leader_id } = validatedFields.data;
+
+  try {
+    await sql`
+      INSERT INTO farmers (name, id_number, phone_number, city, district, sector, cell, village, team_leader_id)
+      VALUES (${name}, ${id_number}, ${phone_number}, ${city}, ${district}, ${sector}, ${cell}, ${village}, ${team_leader_id})
+    `;
+  } catch (error: any) {
+    console.error("Error inserting farmer:", error.message);
+    return {
+      message: `Database Error: Failed to Create Farmer. ${error.message || ''}`,
+    };
+  }
+
+  revalidatePath('/dashboard/farmers');
+  redirect('/dashboard/farmers');
+}
+

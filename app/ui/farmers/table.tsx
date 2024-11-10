@@ -5,8 +5,9 @@ import {
   CustomersTableType,
   FormattedCustomersTable,
 } from '@/app/lib/definitions';
-import { fetchFilteredCustomers } from '@/app/lib/data';
+import { fetchFilteredCustomers, fetchFarmers } from '@/app/lib/data';
 import { UpdateInvoice, DeleteInvoice } from '@/app/ui/customers/buttons';
+import { UpdateFarmer } from './buttons';
 
 export default async function CustomersTable({
   query,
@@ -17,6 +18,8 @@ export default async function CustomersTable({
   currentPage: number;
 }) {
   const customers = await fetchFilteredCustomers(query, currentPage);
+  const farmers = await fetchFarmers();
+  console.log(farmers);
   return (
     <div className="w-full">
       <div className="mt-6 flow-root">
@@ -71,16 +74,17 @@ export default async function CustomersTable({
                       Name
                     </th>
                     <th scope="col" className="px-3 py-5 font-medium">
-                      Email
+                      Phone Number
                     </th>
+
                     <th scope="col" className="px-3 py-5 font-medium">
-                      Total Invoices
-                    </th>
-                    <th scope="col" className="px-3 py-5 font-medium">
-                      Total Pending
+                      District
                     </th>
                     <th scope="col" className="px-4 py-5 font-medium">
-                      Total Paid
+                      Sector
+                    </th>
+                    <th scope="col" className="px-4 py-5 font-medium">
+                      Village
                     </th>
                     <th scope="col" className="relative py-3 pl-6 pr-3">
                       <span className="sr-only">Edit</span>
@@ -89,36 +93,36 @@ export default async function CustomersTable({
                 </thead>
 
                 <tbody className="divide-y divide-gray-200 text-gray-900">
-                  {customers.map((customer) => (
-                    <tr key={customer.id} className="group">
+                  {farmers.map((farmer) => (
+                    <tr key={farmer.id} className="group">
                       <td className="whitespace-nowrap bg-white py-5 pl-4 pr-3 text-sm text-black group-first-of-type:rounded-md group-last-of-type:rounded-md sm:pl-6">
                         <div className="flex items-center gap-3">
-                          <Image
-                            src={customer.image_url}
+                          {/* <Image
+                            src="https://picsum.photos/500/500"
                             className="rounded-full"
-                            alt={`${customer.name}'s profile picture`}
+                            alt={`${farmer.name}'s profile picture`}
                             width={28}
                             height={28}
-                          />
-                          <p>{customer.name}</p>
+                          /> */}
+                          <p>{farmer.name}</p>
                         </div>
                       </td>
                       <td className="whitespace-nowrap bg-white px-4 py-5 text-sm">
-                        {customer.email}
+                        {farmer.phone_number}
                       </td>
                       <td className="whitespace-nowrap bg-white px-4 py-5 text-sm">
-                        {customer.total_invoices}
+                        {farmer.district}
                       </td>
                       <td className="whitespace-nowrap bg-white px-4 py-5 text-sm">
-                        {customer.total_pending}
+                        {farmer.sector}
                       </td>
-                      <td className="whitespace-nowrap bg-white px-4 py-5 text-sm group-first-of-type:rounded-md group-last-of-type:rounded-md">
-                        {customer.total_paid}
+                      <td className="whitespace-nowrap bg-white px-4 py-5 text-sm">
+                        {farmer.village}
                       </td>
                       <td className="whitespace-nowrap py-3 pl-6 pr-3">
                         <div className="flex justify-end gap-3">
-                          <UpdateInvoice id={customer.id} />
-                          <DeleteInvoice id={customer.id} />
+                          <UpdateFarmer id={farmer.id} />
+                          <DeleteInvoice id={farmer.id} />
                         </div>
                       </td>
                     </tr>
