@@ -114,7 +114,7 @@ export type FarmerState = {
     cell?: string[];
     village?: string[];
     team_leader_id?: string[];
-    area?: number[];
+    area?: string[];
   };
   message?: string | null;
 };
@@ -267,7 +267,7 @@ export async function authenticate(
   }
 }
 
-export async function createFarmer(prevState: State, formData: FormData) {
+export async function createFarmer(prevState: FarmerState, formData: FormData) {
   const validatedFields = CreateFarmer.safeParse({
     name: formData.get('name'),
     id_number: formData.get('id_number'),

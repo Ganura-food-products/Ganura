@@ -4,12 +4,12 @@ import { CustomerField, LeaderField } from '@/app/lib/definitions';
 import Link from 'next/link';
 import { UserCircleIcon } from '@heroicons/react/24/outline';
 import { Button } from '@/app/ui/button';
-import { createFarmer, State } from '@/app/lib/actions';
+import { createFarmer, FarmerState } from '@/app/lib/actions';
 import { useActionState } from 'react';
 import { Autocomplete, AutocompleteItem } from '@nextui-org/autocomplete';
 
 export default function Form({ leaders }: { leaders: LeaderField[] }) {
-  const initialState: State = { message: null, errors: {} };
+  const initialState: FarmerState = { message: null, errors: {} };
   const [state, formAction] = useActionState(createFarmer, initialState);
   return (
     <form action={formAction}>
@@ -246,7 +246,7 @@ export default function Form({ leaders }: { leaders: LeaderField[] }) {
               <input
                 id="area"
                 name="area"
-                type="text"
+                type="number"
                 placeholder="Enter Area"
                 className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
                 aria-describedby="area-error"
