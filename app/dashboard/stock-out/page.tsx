@@ -6,7 +6,7 @@ import { InvoicesTableSkeleton } from '@/app/ui/skeletons';
 import { Suspense } from 'react';
 import { fetchGoodsPages } from '@/app/lib/data';
 import { Metadata } from 'next';
-import { CreateSale, CreateStock } from '@/app/ui/stock-out/buttons';
+import { CreateSale } from '@/app/ui/stock-out/buttons';
 
 export const metadata: Metadata = {
   title: 'Sales',
