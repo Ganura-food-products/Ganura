@@ -7,6 +7,11 @@ import {
   LatestInvoiceRaw,
   Revenue,
   FarmersTableType,
+  LeadersTableType,
+  ProductsTableType,
+  LeaderField,
+  SalesTableType,
+  GoodsTableType,
 } from './definitions';
 import { formatCurrency } from './utils';
 
@@ -60,23 +65,43 @@ export async function fetchCardData() {
          SUM(CASE WHEN status = 'paid' THEN amount ELSE 0 END) AS "paid",
          SUM(CASE WHEN status = 'pending' THEN amount ELSE 0 END) AS "pending"
          FROM invoices`;
+    const farmerCountPromise = sql`SELECT COUNT(*) FROM farmers`;
+    const totalAreaPromise = sql`SELECT SUM(area) FROM farmers`;
+    const totalQuantityPromise = sql`SELECT SUM(quantity) FROM goods`;
+    const totalQuantitySalesPromise = sql`SELECT SUM(quantity) FROM sales`;
 
     const data = await Promise.all([
       invoiceCountPromise,
       customerCountPromise,
       invoiceStatusPromise,
+      farmerCountPromise,
+      totalAreaPromise,
+      totalQuantityPromise,
+      totalQuantitySalesPromise,
     ]);
 
     const numberOfInvoices = Number(data[0].rows[0].count ?? '0');
     const numberOfCustomers = Number(data[1].rows[0].count ?? '0');
     const totalPaidInvoices = formatCurrency(data[2].rows[0].paid ?? '0');
     const totalPendingInvoices = formatCurrency(data[2].rows[0].pending ?? '0');
+    const numberOfFarmers = Number(
+      data[3].rows[0].count ?? '0'
+    ).toLocaleString();
+    const totalArea = Number(data[4].rows[0].sum ?? '0').toLocaleString();
+    const totalQuantity = Number(data[5].rows[0].sum ?? '0').toLocaleString();
+    const totalQuantitySales = Number(
+      data[6].rows[0].sum ?? '0'
+    ).toLocaleString();
 
     return {
       numberOfCustomers,
       numberOfInvoices,
       totalPaidInvoices,
       totalPendingInvoices,
+      numberOfFarmers,
+      totalArea,
+      totalQuantity,
+      totalQuantitySales,
     };
   } catch (error) {
     console.error('Database Error:', error);
@@ -84,7 +109,7 @@ export async function fetchCardData() {
   }
 }
 
-const ITEMS_PER_PAGE = 6;
+const ITEMS_PER_PAGE = 8;
 export async function fetchFilteredInvoices(
   query: string,
   currentPage: number
@@ -233,5 +258,292 @@ export async function fetchFarmers() {
   } catch (err) {
     console.error('Database Error:', err);
     throw new Error('Failed to fetch farmers table.');
+  }
+}
+
+export async function fetchFilteredFarmers(query: string, currentPage: number) {
+  const offset = (currentPage - 1) * ITEMS_PER_PAGE;
+
+  try {
+    const farmers = await sql<FarmersTableType>`
+      SELECT *
+      FROM farmers
+      WHERE
+        name ILIKE ${`%${query}%`}
+      ORDER BY name ASC
+      LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset}
+    `;
+
+    return farmers.rows;
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch farmers.');
+  }
+}
+
+export async function fetchFarmersPages(query: string) {
+  try {
+    const count = await sql`SELECT COUNT(*)
+    FROM farmers
+    WHERE
+      name ILIKE ${`%${query}%`}
+  `;
+
+    const totalPages = Math.ceil(Number(count.rows[0].count) / ITEMS_PER_PAGE);
+    return totalPages;
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch total number of farmers.');
+  }
+}
+
+export async function fetchFarmerById(id: string) {
+  try {
+    const data = await sql<FarmersTableType>`
+      SELECT *
+      FROM farmers
+      WHERE id = ${id}
+    `;
+
+    const farmer = data.rows;
+    return farmer[0];
+  } catch (err) {
+    console.error('Database Error:', err);
+    throw new Error('Failed to fetch farmer.');
+  }
+}
+
+export async function fetchLeaders() {
+  try {
+    const data = await sql<LeaderField>`
+      SELECT id, name
+      FROM leaders
+      ORDER BY name ASC
+    `;
+
+    const leaders = data.rows;
+    return leaders;
+  } catch (err) {
+    console.error('Database Error:', err);
+    throw new Error('Failed to fetch leaders table.');
+  }
+}
+
+export async function fetchFilteredLeaders(query: string, currentPage: number) {
+  const offset = (currentPage - 1) * ITEMS_PER_PAGE;
+
+  try {
+    const leaders = await sql<LeadersTableType>`
+      SELECT *
+      FROM leaders
+      WHERE
+        name ILIKE ${`%${query}%`}
+      ORDER BY name ASC
+      LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset}
+    `;
+
+    return leaders.rows;
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch leaders.');
+  }
+}
+
+export async function fetchLeadersPages(query: string) {
+  try {
+    const count = await sql`SELECT COUNT(*)
+    FROM leaders
+    WHERE
+      name ILIKE ${`%${query}%`}
+  `;
+
+    const totalPages = Math.ceil(Number(count.rows[0].count) / ITEMS_PER_PAGE);
+    return totalPages;
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch total number of leaders.');
+  }
+}
+
+export async function fetchProducts() {
+  try {
+    const data = await sql<ProductsTableType>`
+      SELECT *
+      FROM products
+      ORDER BY name ASC
+    `;
+
+    const products = data.rows;
+    return products;
+  } catch (err) {
+    console.error('Database Error:', err);
+    throw new Error('Failed to fetch products table.');
+  }
+}
+
+export async function fetchFilteredProducts(
+  query: string,
+  currentPage: number
+) {
+  const offset = (currentPage - 1) * ITEMS_PER_PAGE;
+
+  try {
+    const products = await sql<ProductsTableType>`
+      SELECT *
+      FROM products
+      WHERE
+        name ILIKE ${`%${query}%`}
+      ORDER BY name ASC
+      LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset}
+    `;
+
+    return products.rows;
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch products.');
+  }
+}
+
+export async function fetchFilteredSupervisors(
+  query: string,
+  currentPage: number
+) {
+  const offset = (currentPage - 1) * ITEMS_PER_PAGE;
+
+  try {
+    const supervisors = await sql<LeadersTableType>`
+      SELECT *
+      FROM supervisors
+      WHERE
+        name ILIKE ${`%${query}%`}
+      ORDER BY name ASC
+      LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset}
+    `;
+
+    return supervisors.rows;
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch supervisors.');
+  }
+}
+
+export async function fetchSupervisorsPages(query: string) {
+  try {
+    const count = await sql`SELECT COUNT(*)
+    FROM supervisors
+    WHERE
+      name ILIKE ${`%${query}%`}
+  `;
+
+    const totalPages = Math.ceil(Number(count.rows[0].count) / ITEMS_PER_PAGE);
+    return totalPages;
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch total number of supervisors.');
+  }
+}
+
+export async function fetchSupervisorById(id: string) {
+  try {
+    const data = await sql<LeadersTableType>`
+      SELECT *
+      FROM supervisors
+      WHERE id = ${id}
+    `;
+
+    const supervisor = data.rows;
+    return supervisor[0];
+  } catch (err) {
+    console.error('Database Error:', err);
+    throw new Error('Failed to fetch supervisor.');
+  }
+}
+
+export async function fetchFilteredGoods(query: string, currentPage: number) {
+  const offset = (currentPage - 1) * ITEMS_PER_PAGE;
+
+  try {
+    const goods = await sql<GoodsTableType>`
+      SELECT *
+      FROM goods
+      WHERE
+        supplier ILIKE ${`%${query}%`}
+      ORDER BY supplier ASC
+      LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset}
+    `;
+
+    return goods.rows;
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch goods.');
+  }
+}
+
+export async function fetchGoodsPages(query: string) {
+  try {
+    const count = await sql`SELECT COUNT(*)
+    FROM goods
+    WHERE
+      supplier ILIKE ${`%${query}%`}
+  `;
+
+    const totalPages = Math.ceil(Number(count.rows[0].count) / ITEMS_PER_PAGE);
+    return totalPages;
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch total number of stockin.');
+  }
+}
+
+export async function fetchGoodsById(id: string) {
+  try {
+    const data = await sql<GoodsTableType>`
+      SELECT *
+      FROM goods
+      WHERE id = ${id}
+    `;
+
+    const goods = data.rows;
+    return goods[0];
+  } catch (err) {
+    console.error('Database Error:', err);
+    throw new Error('Failed to fetch goods.');
+  }
+}
+
+export async function fetchSales() {
+  try {
+    const data = await sql<SalesTableType>`
+      SELECT
+        products.name AS product,
+        SUM(goods.quantity) AS quantity,
+        SUM(goods.quantity * products.price) AS revenue
+      FROM goods
+      JOIN products ON goods.product_id = products.id
+      GROUP BY products.name
+      ORDER BY revenue DESC
+    `;
+
+    const sales = data.rows;
+    return sales;
+  } catch (err) {
+    console.error('Database Error:', err);
+    throw new Error('Failed to fetch sales data.');
+  }
+}
+
+export async function fetchFilteredSales(query: string, currentPage: number) {
+  const offset = (currentPage - 1) * ITEMS_PER_PAGE;
+
+  try {
+    const sales = await sql<SalesTableType>`
+      SELECT
+        * FROM sales
+    `;
+
+    return sales.rows;
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch sales.');
   }
 }

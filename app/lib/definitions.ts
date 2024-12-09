@@ -80,11 +80,40 @@ export type CustomerField = {
   name: string;
 };
 
+export type FarmerField = {
+  id: string;
+  name: string;
+};
+
+export type ProductField = {
+  id: string;
+  name: string;
+};
+
+export type LeaderField = {
+  id: string;
+  name: string;
+};
+
 export type InvoiceForm = {
   id: string;
   customer_id: string;
   amount: number;
   status: 'pending' | 'paid';
+};
+
+export type FarmerForm = {
+  id: string;
+  name: string;
+  id_number: string;
+  phone_number: string;
+  city: string;
+  district: string;
+  sector: string;
+  cell: string;
+  village: string;
+  team_leader_id: string;
+  area: number;
 };
 
 export type CustomerForm = {
@@ -95,6 +124,59 @@ export type CustomerForm = {
 };
 
 export type FarmersTableType = {
+  id: string;
+  name: string;
+  phone_number: string;
+  email: string;
+  id_number: string;
+  city: string;
+  district: string;
+  sector: string;
+  village: string;
+  cell: string;
+  team_leader_id: string;
+  area: number;
+};
+
+export type LeadersTableType = {
+  id: string;
+  name: string;
+  phone_number: string;
+  email: string;
+  id_number: string;
+  city: string;
+  district: string;
+  sector: string;
+  village: string;
+  cell: string;
+  supervisor_id: string;
+};
+
+export type GoodsTableType = {
+  id: string;
+  product: string;
+  supplier: string;
+  quantity: number;
+  date: string;
+};
+
+export type SalesTableType = {
+  id: string;
+  product: string;
+  customer: string;
+  quantity: number;
+  date: string;
+};
+
+export type ProductsTableType = {
+  id: string;
+  name: string;
+  purchase_unit_price: number;
+  sale_unit_price: number;
+  unit: string;
+};
+
+export type SupervisorsTableType = {
   id: string;
   name: string;
   phone_number: string;
