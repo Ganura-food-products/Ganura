@@ -629,7 +629,7 @@ export async function updateGoods(
     product: formData.get('product'),
     supplier: formData.get('supplier'),
     quantity: formData.get('quantity'),
-    date: formData.get('date'),
+    stock_date: formData.get('date'),
   });
 
   if (!validatedFields.success) {
@@ -639,12 +639,12 @@ export async function updateGoods(
     };
   }
 
-  const { product, supplier, quantity, date } = validatedFields.data;
+  const { product, supplier, quantity, stock_date } = validatedFields.data;
 
   try {
     await sql`
       UPDATE goods
-      SET product = ${product}, supplier = ${supplier}, quantity = ${quantity}, date = ${date}
+      SET product = ${product}, supplier = ${supplier}, quantity = ${quantity}, date = ${stock_date}
       WHERE id = ${id}
     `;
   } catch (error: any) {
