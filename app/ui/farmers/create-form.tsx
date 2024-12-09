@@ -6,7 +6,7 @@ import { UserCircleIcon } from '@heroicons/react/24/outline';
 import { Button } from '@/app/ui/button';
 import { createFarmer, State } from '@/app/lib/actions';
 import { useActionState } from 'react';
-import { Autosuggest } from 'react-autosuggest';
+import { Autocomplete, AutocompleteItem } from '@nextui-org/autocomplete';
 
 export default function Form({ leaders }: { leaders: LeaderField[] }) {
   const initialState: State = { message: null, errors: {} };
@@ -271,29 +271,18 @@ export default function Form({ leaders }: { leaders: LeaderField[] }) {
             Choose team leader
           </label>
           <div className="relative">
-            {/* <select
+            <Autocomplete
               id="team_leader"
               name="team_leader_id"
-              className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
-              defaultValue=""
+              placeholder="Choose team leader"
               aria-describedby="team_leader-error"
             >
-              <option value="" disabled>
-                Select a team leader
-              </option>
               {leaders.map((leader) => (
-                <option key={leader.id} value={leader.name}>
+                <AutocompleteItem key={leader.id} value={leader.name}>
                   {leader.name}
-                </option>
+                </AutocompleteItem>
               ))}
-            </select> */}
-            <Autosuggest
-              id="team_leader"
-              name="team_leader_id"
-              suggestions={leaders}
-              placeholder="Select a team leader"
-              aria-describedby="team_leader-error"
-            />
+            </Autocomplete>
             <UserCircleIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
             <div id="team_leader-error" aria-live="polite" aria-atomic="true">
               {state.errors?.team_leader_id &&
