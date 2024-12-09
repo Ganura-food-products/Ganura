@@ -70,7 +70,7 @@ const GoodsSchema = z.object({
   quantity: z.coerce
     .number()
     .gt(0, { message: 'Please enter a quantity greater than 0.' }),
-  date: z.string(),
+  stock_date: z.string(),
 });
 
 const SalesSchema = z.object({
@@ -90,8 +90,8 @@ const UpdateFarmer = FarmerSchema.omit({ id: true, date: true });
 const CreateProduct = ProductSchema.omit({ id: true, date: true });
 const CreateLeader = LeaderSchema.omit({ id: true, date: true });
 const UpdateLeader = LeaderSchema.omit({ id: true, date: true });
-const CreateGoods = GoodsSchema.omit({ id: true, date: true });
-const UpdateGoods = GoodsSchema.omit({ id: true, date: true });
+const CreateGoods = GoodsSchema.omit({ id: true });
+const UpdateGoods = GoodsSchema.omit({ id: true });
 const CreateSales = SalesSchema.omit({ id: true });
 
 export type State = {
@@ -149,7 +149,7 @@ export type GoodsState = {
     product?: string[];
     supplier?: string[];
     quantity?: string[];
-    date?: string[];
+    stock_date?: string[];
   };
   message?: string | null;
 };
@@ -592,7 +592,7 @@ export async function createGoods(prevState: GoodsState, formData: FormData) {
     product: formData.get('product'),
     supplier: formData.get('supplier'),
     quantity: formData.get('quantity'),
-    date: formData.get('date'),
+    stock_date: formData.get('date'),
   });
 
   if (!validatedFields.success) {
@@ -602,12 +602,12 @@ export async function createGoods(prevState: GoodsState, formData: FormData) {
     };
   }
 
-  const { product, supplier, quantity, date } = validatedFields.data;
+  const { product, supplier, quantity, stock_date } = validatedFields.data;
 
   try {
     await sql`
       INSERT INTO goods (product, supplier, quantity, date)
-      VALUES (${product}, ${supplier}, ${quantity}, ${date})
+      VALUES (${product}, ${supplier}, ${quantity}, ${stock_date})
     `;
   } catch (error: any) {
     console.error('Error inserting goods:', error.message);
@@ -748,4 +748,3 @@ export async function deleteSales(id: string) {
     return { message: 'Database Error: Failed to Delete Sales.' };
   }
 }
-
