@@ -2,7 +2,7 @@
 import Image from 'next/image';
 import { ArrowDownOnSquareIcon } from '@heroicons/react/24/outline';
 import jsPDF from 'jspdf';
-import 'jspdf-autotable';
+import autoTable from 'jspdf-autotable';
 import Logo from '../../../public/ganura.png';
 
 export function DownloadGoods({ stock }: { stock: any }) {
@@ -25,7 +25,7 @@ export function DownloadGoods({ stock }: { stock: any }) {
       ['Date', stock.date ? new Date(stock.date).toLocaleDateString() : 'N/A'],
     ];
 
-    doc.autoTable({
+    autoTable(doc, {
       startY: 60,
       head: [['Field', 'Value']],
       body: tableData,

@@ -118,8 +118,8 @@ export default function Form({
             aria-describedby="date-error"
           />
           <div id="date-error" aria-live="polite" aria-atomic="true">
-            {state.errors?.date &&
-              state.errors.date.map((error: string) => (
+            {state.errors?.stock_date &&
+              state.errors.stock_date.map((error: string) => (
                 <p className="mt-2 text-sm text-red-500" key={error}>
                   {error}
                 </p>

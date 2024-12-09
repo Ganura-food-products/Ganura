@@ -1,19 +1,19 @@
 'use client';
 import { ArrowDownOnSquareIcon } from '@heroicons/react/24/outline';
 import jsPDF from 'jspdf';
-import 'jspdf-autotable';
+import autoTable from 'jspdf-autotable';
 import Logo from '../../../public/ganura.png';
 
 export function DownloadGoods({ stock }: { stock: any }) {
   const handleDownload = () => {
     const doc = new jsPDF();
 
-    
     const invoiceNumber = `INV-${Math.floor(Math.random() * 10000)}`;
     doc.addImage(Logo.src, 'PNG', 14, 0, 40, 40, 'logo', 'FAST');
     doc.setFontSize(16);
     doc.text('Invoice', 14, 40);
     doc.text(`Invoice #: ${invoiceNumber}`, 14, 50);
+
     const tableData = [
       ['Supplier', stock.customer],
       ['Product', stock.product],
@@ -21,7 +21,7 @@ export function DownloadGoods({ stock }: { stock: any }) {
       ['Date', stock.date ? new Date(stock.date).toLocaleDateString() : 'N/A'],
     ];
 
-    doc.autoTable({
+    autoTable(doc, {
       startY: 60,
       head: [['Field', 'Value']],
       body: tableData,
