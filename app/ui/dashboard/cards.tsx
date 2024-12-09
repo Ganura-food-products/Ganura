@@ -4,7 +4,7 @@ import {
   UserGroupIcon,
   InboxIcon,
 } from '@heroicons/react/24/outline';
-import { lusitana, montserrat } from '@/app/ui/fonts';
+import { montserrat } from '@/app/ui/fonts';
 
 import { fetchCardData } from '@/app/lib/data';
 
@@ -17,8 +17,6 @@ const iconMap = {
 
 export default async function CardWrapper() {
   const {
-    numberOfInvoices,
-    numberOfCustomers,
     totalPaidInvoices,
     totalArea,
     numberOfFarmers,
@@ -29,7 +27,11 @@ export default async function CardWrapper() {
   return (
     <>
       <Card title="Unpaid Amount" value={totalPaidInvoices} type="collected" />
-      <Card title="Available Stock(KG)" value={totalQuantity-totalQuantitySales} type="pending" />
+      <Card
+        title="Available Stock(KG)"
+        value={totalQuantity - totalQuantitySales}
+        type="pending"
+      />
       <Card title="Total Area(Ha)" value={totalArea} type="invoices" />
       <Card title="Total Suppliers" value={numberOfFarmers} type="customers" />
     </>

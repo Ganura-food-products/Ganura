@@ -88,10 +88,10 @@ export async function fetchCardData() {
       data[3].rows[0].count ?? '0'
     ).toLocaleString();
     const totalArea = Number(data[4].rows[0].sum ?? '0').toLocaleString();
-    const totalQuantity = Number(data[5].rows[0].sum ?? '0').toLocaleString();
+    const totalQuantity = Number(data[5].rows[0].sum ?? '0');
     const totalQuantitySales = Number(
       data[6].rows[0].sum ?? '0'
-    ).toLocaleString();
+    );
 
     return {
       numberOfCustomers,
