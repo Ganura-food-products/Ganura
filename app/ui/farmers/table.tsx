@@ -47,6 +47,11 @@ export default async function CustomersTable({
                             {farmer.phone_number}
                           </a>
                         </p>
+                        <p className="text-sm text-gray-500">
+                          <a href={`tel:${farmer.phone_number}`}>
+                            {farmer.total_goods}
+                          </a>
+                        </p>
                       </div>
                     </div>
                     <div className="flex w-full items-center justify-between border-b py-5">
@@ -81,6 +86,9 @@ export default async function CustomersTable({
                     <th scope="col" className="px-4 py-5 font-medium">
                       Team Leader
                     </th>
+                    <th scope="col" className="px-4 py-5 font-medium">
+                      Provided Stock(KG)
+                    </th>
                     <th scope="col" className="relative py-3 pl-6 pr-3">
                       <span className="sr-only">Edit</span>
                     </th>
@@ -109,6 +117,9 @@ export default async function CustomersTable({
                       </td>
                       <td className="whitespace-nowrap bg-white px-4 py-5 text-sm">
                         {farmer.team_leader_id}
+                      </td>
+                      <td className="whitespace-nowrap bg-white px-4 py-5 text-sm">
+                        {farmer.total_goods}
                       </td>
                       <td className="whitespace-nowrap py-3 pl-6 pr-3">
                         <div className="flex justify-end gap-3">

@@ -17,15 +17,7 @@ import { formatCurrency } from './utils';
 
 export async function fetchRevenue() {
   try {
-    // Artificially delay a response for demo purposes.
-    // Don't do this in production :)
-
-    // console.log('Fetching revenue data...');
-    // await new Promise((resolve) => setTimeout(resolve, 3000));
-
     const data = await sql<Revenue>`SELECT * FROM revenue`;
-
-    // console.log('Data fetch completed after 3 seconds.');
 
     return data.rows;
   } catch (error) {
@@ -56,9 +48,6 @@ export async function fetchLatestInvoices() {
 
 export async function fetchCardData() {
   try {
-    // You can probably combine these into a single SQL query
-    // However, we are intentionally splitting them to demonstrate
-    // how to initialize multiple queries in parallel with JS.
     const invoiceCountPromise = sql`SELECT COUNT(*) FROM invoices`;
     const customerCountPromise = sql`SELECT COUNT(*) FROM customers`;
     const invoiceStatusPromise = sql`SELECT
@@ -69,6 +58,10 @@ export async function fetchCardData() {
     const totalAreaPromise = sql`SELECT SUM(area) FROM farmers`;
     const totalQuantityPromise = sql`SELECT SUM(quantity) FROM goods`;
     const totalQuantitySalesPromise = sql`SELECT SUM(quantity) FROM sales`;
+    const totalQuantityBasilicSeedsStockPromise = sql`SELECT SUM(quantity) FROM goods WHERE product='Basilic Seeds'`;
+    const totalQuantityBasilicSeedsSalesPromise = sql`SELECT SUM(quantity) FROM sales WHERE product='Basilic Seeds'`;
+    const totalQuantityChiaSeedsStockPromise = sql`SELECT SUM(quantity) FROM goods WHERE product='Chia Seeds'`;
+    const totalQuantityChiaSeedsSalesPromise = sql`SELECT SUM(quantity) FROM sales WHERE product='Chia Seeds'`;
 
     const data = await Promise.all([
       invoiceCountPromise,
@@ -78,6 +71,10 @@ export async function fetchCardData() {
       totalAreaPromise,
       totalQuantityPromise,
       totalQuantitySalesPromise,
+      totalQuantityBasilicSeedsStockPromise,
+      totalQuantityBasilicSeedsSalesPromise,
+      totalQuantityChiaSeedsStockPromise,
+      totalQuantityChiaSeedsSalesPromise,
     ]);
 
     const numberOfInvoices = Number(data[0].rows[0].count ?? '0');
@@ -89,10 +86,11 @@ export async function fetchCardData() {
     ).toLocaleString();
     const totalArea = Number(data[4].rows[0].sum ?? '0').toLocaleString();
     const totalQuantity = Number(data[5].rows[0].sum ?? '0');
-    const totalQuantitySales = Number(
-      data[6].rows[0].sum ?? '0'
-    );
-
+    const totalQuantitySales = Number(data[6].rows[0].sum ?? '0');
+    const totalQuantityBasilicSeedsStock = Number(data[7].rows[0].sum ?? '0');
+    const totalQuantityBasilicSeedsSales = Number(data[8].rows[0].sum ?? '0');
+    const totalQuantityChiaSeedsStock = Number(data[9].rows[0].sum ?? '0');
+    const totalQuantityChiaSeedsSales = Number(data[10].rows[0].sum ?? '0');
     return {
       numberOfCustomers,
       numberOfInvoices,
@@ -102,6 +100,10 @@ export async function fetchCardData() {
       totalArea,
       totalQuantity,
       totalQuantitySales,
+      totalQuantityBasilicSeedsStock,
+      totalQuantityBasilicSeedsSales,
+      totalQuantityChiaSeedsStock,
+      totalQuantityChiaSeedsSales,
     };
   } catch (error) {
     console.error('Database Error:', error);
@@ -265,12 +267,15 @@ export async function fetchFilteredFarmers(query: string, currentPage: number) {
   const offset = (currentPage - 1) * ITEMS_PER_PAGE;
 
   try {
-    const farmers = await sql<FarmersTableType>`
-      SELECT *
+    const farmers = await sql<FarmersTableType & { total_goods: number }>`
+      SELECT 
+        farmers.*,
+        COALESCE(SUM(goods.quantity), 0) AS total_goods
       FROM farmers
-      WHERE
-        name ILIKE ${`%${query}%`}
-      ORDER BY name ASC
+      LEFT JOIN goods ON goods.supplier = farmers.name
+      WHERE farmers.name ILIKE ${`%${query}%`}
+      GROUP BY farmers.id, farmers.name, farmers.phone_number, farmers.email, farmers.id_number, farmers.city, farmers.district, farmers.sector, farmers.cell, farmers.village, farmers.tin_number, farmers.company_name, farmers.team_leader_id, farmers.area, farmers.gender, farmers.field_supervisor, farmers.umusaruro
+      ORDER BY farmers.name ASC
       LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset}
     `;
 

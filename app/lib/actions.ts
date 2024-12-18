@@ -101,7 +101,7 @@ export type State = {
     status?: string[];
   };
   message?: string | null;
-};
+}
 
 export type FarmerState = {
   errors?: {

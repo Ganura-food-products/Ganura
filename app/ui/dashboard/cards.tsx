@@ -3,6 +3,7 @@ import {
   ClockIcon,
   UserGroupIcon,
   InboxIcon,
+  TruckIcon,
 } from '@heroicons/react/24/outline';
 import { montserrat } from '@/app/ui/fonts';
 
@@ -13,6 +14,7 @@ const iconMap = {
   customers: UserGroupIcon,
   pending: ClockIcon,
   invoices: InboxIcon,
+  Stock: TruckIcon,
 };
 
 export default async function CardWrapper() {
@@ -20,17 +22,25 @@ export default async function CardWrapper() {
     totalPaidInvoices,
     totalArea,
     numberOfFarmers,
-    totalQuantity,
-    totalQuantitySales,
+    totalQuantityBasilicSeedsStock,
+    totalQuantityBasilicSeedsSales,
+    totalQuantityChiaSeedsStock,
+    totalQuantityChiaSeedsSales,
   } = await fetchCardData();
 
   return (
     <>
       <Card title="Unpaid Amount" value={totalPaidInvoices} type="collected" />
+
       <Card
-        title="Available Stock(KG)"
-        value={totalQuantity - totalQuantitySales}
-        type="pending"
+        title="Available Basilic Seeds(KG)"
+        value={totalQuantityBasilicSeedsStock - totalQuantityBasilicSeedsSales}
+        type="Stock"
+      />
+      <Card
+        title="Available Chia Seeds(KG)"
+        value={totalQuantityChiaSeedsStock - totalQuantityChiaSeedsSales}
+        type="Stock"
       />
       <Card title="Total Area(Ha)" value={totalArea} type="invoices" />
       <Card title="Total Suppliers" value={numberOfFarmers} type="customers" />

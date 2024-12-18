@@ -1,6 +1,6 @@
 'use client';
 
-import { CustomerField, LeaderField } from '@/app/lib/definitions';
+import { LeaderField } from '@/app/lib/definitions';
 import Link from 'next/link';
 import { UserCircleIcon } from '@heroicons/react/24/outline';
 import { Button } from '@/app/ui/button';
