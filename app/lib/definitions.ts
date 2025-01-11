@@ -23,7 +23,7 @@ export type Invoice = {
   date: string;
   // In TypeScript, this is called a string union type.
   // It means that the "status" property can only be one of the two strings: 'pending' or 'paid'.
-  status: 'pending' | 'paid';
+  status: "pending" | "paid";
 };
 
 export type Revenue = {
@@ -40,7 +40,7 @@ export type LatestInvoice = {
 };
 
 // The database returns a number for amount, but we later format it to a string with the formatCurrency function
-export type LatestInvoiceRaw = Omit<LatestInvoice, 'amount'> & {
+export type LatestInvoiceRaw = Omit<LatestInvoice, "amount"> & {
   amount: number;
 };
 
@@ -52,16 +52,15 @@ export type InvoicesTable = {
   image_url: string;
   date: string;
   amount: number;
-  status: 'pending' | 'paid';
+  status: "pending" | "paid";
 };
 
 export type CustomersTableType = {
   id: string;
   name: string;
   email: string;
-  image_url: string;
   total_invoices: number;
-  total_pending: number;
+
   total_paid: number;
 };
 
@@ -95,11 +94,16 @@ export type LeaderField = {
   name: string;
 };
 
+export type SupervisorField = {
+  id: string;
+  name: string;
+};
+
 export type InvoiceForm = {
   id: string;
   customer_id: string;
   amount: number;
-  status: 'pending' | 'paid';
+  status: "pending" | "paid";
 };
 
 export type FarmerForm = {
@@ -120,7 +124,7 @@ export type CustomerForm = {
   id: string;
   name: string;
   email: string;
-  image_url: string;
+  // image_url: string;
 };
 
 export type FarmersTableType = {
@@ -152,10 +156,41 @@ export type LeadersTableType = {
   supervisor_id: string;
 };
 
+export type LeadersTable = {
+  id: string;
+  name: string;
+  phone_number: string;
+  email: string;
+  id_number: string;
+  city: string;
+  district: string;
+  sector: string;
+  village: string;
+  cell: string;
+  supervisor_id: string;
+  supervisor: string;
+};
+
 export type GoodsTableType = {
   id: string;
   product: string;
   supplier: string;
+  quantity: number;
+  date: string;
+};
+
+export type GoodsForm = {
+  id: string;
+  product: string;
+  supplier: string;
+  quantity: number;
+  date: string;
+};
+
+export type SalesForm = {
+  id: string;
+  product: string;
+  customer: string;
   quantity: number;
   date: string;
 };
@@ -185,6 +220,6 @@ export type SupervisorsTableType = {
   city: string;
   district: string;
   sector: string;
-  village: string;
   cell: string;
+  village: string;
 };

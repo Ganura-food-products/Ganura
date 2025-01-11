@@ -1,20 +1,19 @@
 'use client';
 
-import { CustomerField } from '@/app/lib/definitions';
 import Link from 'next/link';
 import {
   CheckIcon,
-  ClockIcon,
+
   CurrencyDollarIcon,
-  UserCircleIcon,
+
 } from '@heroicons/react/24/outline';
 import { Button } from '@/app/ui/button';
-import { createInvoice, State, createProduct } from '@/app/lib/actions';
+import { createProduct, ProductState } from '@/app/lib/actions';
 import { useActionState } from 'react';
 import { ScaleIcon } from '@heroicons/react/24/solid';
 
-export default function Form({ customers }: { customers: CustomerField[] }) {
-  const initialState: State = { message: null, errors: {} };
+export default function Form() {
+  const initialState: ProductState = { message: null, errors: {} };
   const [state, formAction] = useActionState(createProduct, initialState);
   return (
     <form action={formAction}>
@@ -55,12 +54,12 @@ export default function Form({ customers }: { customers: CustomerField[] }) {
 
         {/* Product name with an icon related to it, use the text input type */}
         <div className="mb-4">
-          <label htmlFor="product" className="mb-2 block text-sm font-medium">
+          <label htmlFor="name" className="mb-2 block text-sm font-medium">
             Choose product name
           </label>
           <div className="relative">
             <input
-              id="product"
+              id="name"
               name="name"
               type="text"
               placeholder="Enter product name"
@@ -69,8 +68,8 @@ export default function Form({ customers }: { customers: CustomerField[] }) {
             />
             <CheckIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
             <div id="product-error" aria-live="polite" aria-atomic="true">
-              {state.errors?.product &&
-                state.errors.product.map((error: string) => (
+              {state.errors?.name &&
+                state.errors.name.map((error: string) => (
                   <p className="mt-2 text-sm text-red-500" key={error}>
                     {error}
                   </p>
@@ -100,8 +99,8 @@ export default function Form({ customers }: { customers: CustomerField[] }) {
               />
               <CurrencyDollarIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
               <div id="amount-error" aria-live="polite" aria-atomic="true">
-                {state.errors?.amount &&
-                  state.errors.amount.map((error: string) => (
+                {state.errors?.purchase_unit_price &&
+                  state.errors.purchase_unit_price.map((error: string) => (
                     <p className="mt-2 text-sm text-red-500" key={error}>
                       {error}
                     </p>
@@ -130,8 +129,8 @@ export default function Form({ customers }: { customers: CustomerField[] }) {
               />
               <CurrencyDollarIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
               <div id="amount-error" aria-live="polite" aria-atomic="true">
-                {state.errors?.amount &&
-                  state.errors.amount.map((error: string) => (
+                {state.errors?.sale_unit_price &&
+                  state.errors.sale_unit_price.map((error: string) => (
                     <p className="mt-2 text-sm text-red-500" key={error}>
                       {error}
                     </p>
@@ -182,8 +181,8 @@ export default function Form({ customers }: { customers: CustomerField[] }) {
             </div>
           </div>
           <div id="status-error" aria-live="polite" aria-atomic="true">
-            {state.errors?.status &&
-              state.errors.status.map((error: string) => (
+            {state.errors?.unit &&
+              state.errors.unit.map((error: string) => (
                 <p className="mt-2 text-sm text-red-500" key={error}>
                   {error}
                 </p>

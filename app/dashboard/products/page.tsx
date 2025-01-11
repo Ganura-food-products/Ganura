@@ -1,11 +1,11 @@
 import Pagination from '@/app/ui/invoices/pagination';
 import Search from '@/app/ui/search';
 import Table from '@/app/ui/products/table';
-import { CreateInvoice } from '@/app/ui/invoices/buttons';
+
 import { lusitana } from '@/app/ui/fonts';
 import { InvoicesTableSkeleton } from '@/app/ui/skeletons';
 import { Suspense } from 'react';
-import { fetchInvoicesPages } from '@/app/lib/data';
+import { fetchProductPages } from '@/app/lib/data';
 import { Metadata } from 'next';
 import { CreateProduct } from '@/app/ui/products/buttons';
 
@@ -22,7 +22,7 @@ export default async function Page(props: {
   const searchParams = await props.searchParams;
   const query = searchParams?.query || '';
   const currentPage = Number(searchParams?.page) || 1;
-  const totalPages = await fetchInvoicesPages(query);
+  const totalPages = await fetchProductPages(query);
 
   return (
     <div className="w-full">

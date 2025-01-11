@@ -1,18 +1,10 @@
-import Image from 'next/image';
-import { lusitana } from '@/app/ui/fonts';
-import Search from '@/app/ui/search';
+
 import {
-  CustomersTableType,
-  FormattedCustomersTable,
-} from '@/app/lib/definitions';
-import {
-  fetchFilteredCustomers,
-  fetchFarmers,
-  fetchLeaders,
+
   fetchFilteredLeaders
 } from '@/app/lib/data';
-import { UpdateInvoice, DeleteInvoice } from '@/app/ui/customers/buttons';
-import { UpdateFarmer } from './buttons';
+// import { UpdateInvoice, DeleteInvoice } from '@/app/ui/customers/buttons';
+import { UpdateFarmer, DeleteFarmer } from './buttons';
 
 export default async function CustomersTable({
   query,
@@ -22,7 +14,7 @@ export default async function CustomersTable({
   query: string;
   currentPage: number;
 }) {
-  const customers = await fetchFilteredCustomers(query, currentPage);
+  // const customers = await fetchFilteredCustomers(query, currentPage);
   const leaders = await fetchFilteredLeaders(query, currentPage);
   console.log(leaders);
   return (
@@ -31,7 +23,7 @@ export default async function CustomersTable({
         <div className="overflow-x-auto">
           <div className="inline-block min-w-full align-middle">
             <div className="overflow-hidden rounded-md bg-gray-50 p-2 md:pt-0">
-              <div className="md:hidden">
+              {/* <div className="md:hidden">
                 {customers?.map((customer) => (
                   <div
                     key={customer.id}
@@ -71,7 +63,7 @@ export default async function CustomersTable({
                     </div>
                   </div>
                 ))}
-              </div>
+              </div> */}
               <table className="hidden min-w-full rounded-md text-gray-900 md:table">
                 <thead className="rounded-md bg-gray-50 text-left text-sm font-normal">
                   <tr>
@@ -101,39 +93,39 @@ export default async function CustomersTable({
                 </thead>
 
                 <tbody className="divide-y divide-gray-200 text-gray-900">
-                  {leaders.map((farmer) => (
-                    <tr key={farmer.id} className="group">
+                  {leaders.map((leader) => (
+                    <tr key={leader.id} className="group">
                       <td className="whitespace-nowrap bg-white py-5 pl-4 pr-3 text-sm text-black group-first-of-type:rounded-md group-last-of-type:rounded-md sm:pl-6">
                         <div className="flex items-center gap-3">
                           {/* <Image
                             src="https://picsum.photos/500/500"
                             className="rounded-full"
-                            alt={`${farmer.name}'s profile picture`}
+                            alt={`${leader.name}'s profile picture`}
                             width={28}
                             height={28}
                           /> */}
-                          <p>{farmer.name}</p>
+                          <p>{leader.name}</p>
                         </div>
                       </td>
                       <td className="whitespace-nowrap bg-white px-4 py-5 text-sm">
-                        {farmer.phone_number}
+                        {leader.phone_number}
                       </td>
                       <td className="whitespace-nowrap bg-white px-4 py-5 text-sm">
-                        {farmer.district}
+                        {leader.id_number}
                       </td>
                       <td className="whitespace-nowrap bg-white px-4 py-5 text-sm">
-                        {farmer.sector}
+                        {leader.district}
                       </td>
                       <td className="whitespace-nowrap bg-white px-4 py-5 text-sm">
-                        {farmer.cell}
+                        {leader.sector}
                       </td>
                       <td className="whitespace-nowrap bg-white px-4 py-5 text-sm">
-                        {farmer.field_supervisor}
+                        {leader.supervisor_id}
                       </td>
                       <td className="whitespace-nowrap py-3 pl-6 pr-3">
                         <div className="flex justify-end gap-3">
-                          <UpdateFarmer id={farmer.id} />
-                          <DeleteInvoice id={farmer.id} />
+                          <UpdateFarmer id={leader.id} />
+                          <DeleteFarmer id={leader.id} />
                         </div>
                       </td>
                     </tr>

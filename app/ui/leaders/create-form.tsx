@@ -1,14 +1,14 @@
 'use client';
 
-import { CustomerField } from '@/app/lib/definitions';
+import { CustomerField, LeaderField } from '@/app/lib/definitions';
 import Link from 'next/link';
 import { UserCircleIcon } from '@heroicons/react/24/outline';
 import { Button } from '@/app/ui/button';
-import { createLeader, State } from '@/app/lib/actions';
+import { createLeader, LeaderState } from '@/app/lib/actions';
 import { useActionState } from 'react';
 
-export default function Form({ customers }: { customers: CustomerField[] }) {
-  const initialState: State = { message: null, errors: {} };
+export default function Form({ supervisor }: { supervisor: LeaderField[] }) {
+  const initialState: LeaderState = { message: null, errors: {} };
   const [state, formAction] = useActionState(createLeader, initialState);
   return (
     <form action={formAction}>
@@ -249,7 +249,7 @@ export default function Form({ customers }: { customers: CustomerField[] }) {
               <option value="" disabled>
                 Select a Field Supervisor
               </option>
-              {customers.map((customer) => (
+              {supervisor.map((customer) => (
                 <option key={customer.id} value={customer.name}>
                   {customer.name}
                 </option>

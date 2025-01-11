@@ -1,4 +1,4 @@
-import Image from 'next/image';
+
 import { UpdateInvoice, DeleteGoods } from '@/app/ui/stock-in/buttons';
 
 import {
@@ -15,8 +15,8 @@ export default async function InvoicesTable({
   query: string;
   currentPage: number;
 }) {
-  const invoices = await fetchFilteredInvoices(query, currentPage);
-  const products = await fetchProducts();
+  // const invoices = await fetchFilteredInvoices(query, currentPage);
+  // const products = await fetchProducts();
   const stockins = await fetchFilteredGoods(query, currentPage);
   return (
     <div className="mt-6 flow-root">

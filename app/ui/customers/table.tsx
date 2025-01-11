@@ -33,13 +33,13 @@ export default async function CustomersTable({
                       <div>
                         <div className="mb-2 flex items-center">
                           <div className="flex items-center gap-3">
-                            <Image
+                            {/* <Image
                               src={customer.image_url}
                               className="rounded-full"
                               alt={`${customer.name}'s profile picture`}
                               width={28}
                               height={28}
-                            />
+                            /> */}
                             <p>{customer.name}</p>
                           </div>
                         </div>
@@ -51,7 +51,7 @@ export default async function CustomersTable({
                     <div className="flex w-full items-center justify-between border-b py-5">
                       <div className="flex w-1/2 flex-col">
                         <p className="text-xs">Pending</p>
-                        <p className="font-medium">{customer.total_pending}</p>
+                        {/* <p className="font-medium">{customer.total_pending}</p> */}
                       </div>
                       <div className="flex w-1/2 flex-col">
                         <p className="text-xs">Paid</p>
@@ -106,7 +106,7 @@ export default async function CustomersTable({
                         {customer.total_invoices}
                       </td>
                       <td className="whitespace-nowrap bg-white px-4 py-5 text-sm">
-                        {customer.total_pending}
+                        {/* {customer.total_pending} */}
                       </td>
                       <td className="whitespace-nowrap bg-white px-4 py-5 text-sm group-first-of-type:rounded-md group-last-of-type:rounded-md">
                         {customer.total_paid}

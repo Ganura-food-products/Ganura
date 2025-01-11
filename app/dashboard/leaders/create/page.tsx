@@ -1,9 +1,9 @@
 import Form from '@/app/ui/leaders/create-form';
 import Breadcrumbs from '@/app/ui/invoices/breadcrumbs';
-import { fetchCustomers } from '@/app/lib/data';
+import { fetchSupervisors } from '@/app/lib/data';
  
 export default async function Page() {
-  const customers = await fetchCustomers();
+  const supervisor = await fetchSupervisors();
  
   return (
     <main>
@@ -17,7 +17,7 @@ export default async function Page() {
           },
         ]}
       />
-      <Form customers={customers} />
+      <Form supervisor={supervisor} />
     </main>
   );
 }

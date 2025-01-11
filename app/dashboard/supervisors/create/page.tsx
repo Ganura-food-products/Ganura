@@ -1,23 +1,22 @@
-import Form from '@/app/ui/leaders/create-form';
+import Form from '@/app/ui/supervisors/create-form';
 import Breadcrumbs from '@/app/ui/invoices/breadcrumbs';
-import { fetchCustomers } from '@/app/lib/data';
+
  
 export default async function Page() {
-  const customers = await fetchCustomers();
- 
+  
   return (
     <main>
       <Breadcrumbs
         breadcrumbs={[
-          { label: 'Team Leaders', href: '/dashboard/leaders' },
+          { label: 'supervisors', href: '/dashboard/supervisors' },
           {
-            label: 'Insert a Team Leader',
-            href: '/dashboard/leaders/create',
+            label: 'Insert a Team supervisor',
+            href: '/dashboard/supervisors/create',
             active: true,
           },
         ]}
       />
-      <Form customers={customers} />
+      <Form/>
     </main>
   );
 }

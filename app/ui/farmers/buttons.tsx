@@ -1,6 +1,6 @@
 import { PencilIcon, PlusIcon, TrashIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
-import { deleteFarmer, deleteInvoice } from '@/app/lib/actions';
+import { deleteFarmer } from '@/app/lib/actions';
 
 export function CreateFarmer() {
   return (

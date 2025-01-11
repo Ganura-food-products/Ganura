@@ -1,17 +1,17 @@
-import Pagination from '@/app/ui/invoices/pagination';
-import Search from '@/app/ui/search';
-import Table from '@/app/ui/supervisors/table';
-import { CreateInvoice } from '@/app/ui/invoices/buttons';
-import { lusitana } from '@/app/ui/fonts';
-import { InvoicesTableSkeleton } from '@/app/ui/skeletons';
-import { Suspense } from 'react';
-import { fetchInvoicesPages, fetchSupervisorsPages } from '@/app/lib/data';
-import { Metadata } from 'next';
-import { CreateCustomer } from '@/app/ui/customers/buttons';
-import { CreateSupervisor } from '@/app/ui/supervisors/buttons';
+import Pagination from "@/app/ui/invoices/pagination";
+import Search from "@/app/ui/search";
+import Table from "@/app/ui/supervisors/table";
+
+import { lusitana } from "@/app/ui/fonts";
+import { InvoicesTableSkeleton } from "@/app/ui/skeletons";
+import { Suspense } from "react";
+import { fetchSupervisorsPages } from "@/app/lib/data";
+import { Metadata } from "next";
+
+import { CreateSupervisor } from "@/app/ui/supervisors/buttons";
 
 export const metadata: Metadata = {
-  title: 'Supervisors',
+  title: "Supervisors",
 };
 
 export default async function Page(props: {
@@ -21,7 +21,7 @@ export default async function Page(props: {
   }>;
 }) {
   const searchParams = await props.searchParams;
-  const query = searchParams?.query || '';
+  const query = searchParams?.query || "";
   const currentPage = Number(searchParams?.page) || 1;
   const totalPages = await fetchSupervisorsPages(query);
 

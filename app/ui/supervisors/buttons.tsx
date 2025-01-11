@@ -1,11 +1,12 @@
 import { PencilIcon, PlusIcon, TrashIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
-import { deleteInvoice } from '@/app/lib/actions';
+import {deleteSupervisor} from '@/app/lib/actions'
+
 
 export function CreateSupervisor() {
   return (
     <Link
-      href="/dashboard/leaders/create"
+      href="/dashboard/supervisors/create"
       className="flex h-10 items-center rounded-lg bg-blue-600 px-4 text-sm font-medium text-white transition-colors hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
     >
       <span className="hidden md:block">Create a Supervisor</span>{' '}
@@ -14,7 +15,7 @@ export function CreateSupervisor() {
   );
 }
 
-export function UpdateFarmer({ id }: { id: string }) {
+export function UpdateSupervisor({ id }: { id: string }) {
   return (
     <Link
       href={`/dashboard/supervisors/${id}/edit`}
@@ -25,10 +26,10 @@ export function UpdateFarmer({ id }: { id: string }) {
   );
 }
 
-export function DeleteFarmer({ id }: { id: string }) {
-  const deleteInvoiceWithId = deleteInvoice.bind(null, id);
+export function DeleteSupervisor({ id }: { id: string }) {
+  const deleteSupervisorWithId = deleteSupervisor.bind(null, id);
   return (
-    <form action={deleteInvoiceWithId}>
+    <form action={deleteSupervisorWithId}>
       <button className="rounded-md border p-2 hover:bg-gray-100">
         <span className="sr-only">Delete</span>
         <TrashIcon className="w-5" />
