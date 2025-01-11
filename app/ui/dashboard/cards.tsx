@@ -30,7 +30,7 @@ export default async function CardWrapper() {
 
   return (
     <>
-      <Card title="Unpaid Amount" value={totalPaidInvoices} type="collected" />
+      <Card title="paid Amount" value={totalPaidInvoices} type="collected" />
 
       <Card
         title="Available Basilic Seeds(KG)"

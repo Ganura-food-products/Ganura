@@ -6,7 +6,7 @@ import {
   formatCurrency,
   formatNumber,
 } from '@/app/lib/utils';
-import { fetchFilteredInvoices, fetchProducts } from '@/app/lib/data';
+import { fetchFilteredProducts } from '@/app/lib/data';
 
 export default async function InvoicesTable({
   query,
@@ -16,7 +16,7 @@ export default async function InvoicesTable({
   currentPage: number;
 }) {
   
-  const products = await fetchProducts();
+  const products = await fetchFilteredProducts(query, currentPage);
 
   return (
     <div className="mt-6 flow-root">

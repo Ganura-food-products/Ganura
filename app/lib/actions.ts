@@ -730,7 +730,7 @@ export async function deleteLeader(id: string) {
 
 export async function deleteSupervisor(id: string) {
   try {
-    await sql`DELETE FROM supervisos WHERE id = ${id}`;
+    await sql`DELETE FROM supervisors WHERE id = ${id}`;
     revalidatePath("/dashboard/supervisors");
     return { message: "Deleted super." };
   } catch (error) {
