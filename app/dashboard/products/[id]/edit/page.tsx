@@ -1,16 +1,15 @@
-import Form from '@/app/ui/invoices/edit-form';
+import Form from '@/app/ui/products/edit-form';
 import Breadcrumbs from '@/app/ui/invoices/breadcrumbs';
-import { fetchCustomers, fetchInvoiceById } from '@/app/lib/data';
+import { fetchProductById } from '@/app/lib/data';
 import { notFound } from 'next/navigation';
 
 export default async function Page(props: { params: Promise<{ id: string }> }) {
   const params = await props.params;
   const id = params.id;
-  const [invoice, customers] = await Promise.all([
-    fetchInvoiceById(id),
-    fetchCustomers(),
+  const [product] = await Promise.all([
+    fetchProductById(id)
   ]);
-  if (!invoice) {
+  if (!product) {
     notFound();
   }
   return (
@@ -19,13 +18,13 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
         breadcrumbs={[
           { label: 'Products', href: '/dashboard/products' },
           {
-            label: 'Edit Invoice',
-            href: `/dashboard/invoices/${id}/edit`,
+            label: 'Edit products',
+            href: `/dashboard/products/${id}/edit`,
             active: true,
           },
         ]}
       />
-      <Form invoice={invoice} customers={customers} />
+      <Form product={product}/>
     </main>
   );
 }

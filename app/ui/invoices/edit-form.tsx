@@ -1,6 +1,6 @@
 'use client';
 
-import { CustomerField, InvoiceForm } from '@/app/lib/definitions';
+import { FarmerField, InvoiceForm } from '@/app/lib/definitions';
 import {
   CheckIcon,
   ClockIcon,
@@ -9,39 +9,39 @@ import {
 } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { Button } from '@/app/ui/button';
-import { State, updateInvoice } from '@/app/lib/actions';
+import { newState, updateInvoice } from '@/app/lib/actions';
 import { useActionState } from 'react';
 
 export default function EditInvoiceForm({
   invoice,
-  customers,
+  farmers,
 }: {
   invoice: InvoiceForm;
-  customers: CustomerField[];
+  farmers: FarmerField[];
 }) {
-  const initialState: State = { message: null, errors: {} };
+  const initialState: newState = { message: null, errors: {} };
   const updateInvoiceWithId = updateInvoice.bind(null, invoice.id);
   const [state, formAction] = useActionState(updateInvoiceWithId, initialState);
   return (
     <form action={formAction}>
       <div className="rounded-md bg-gray-50 p-4 md:p-6">
         <div className="mb-4">
-          <label htmlFor="customer" className="mb-2 block text-sm font-medium">
-            Choose customer
+          <label htmlFor="farmer" className="mb-2 block text-sm font-medium">
+            Choose farmer
           </label>
           <div className="relative">
             <select
-              id="customer"
-              name="customerId"
+              id="farmer"
+              name="farmerId"
               className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
               defaultValue={invoice.customer_id}
             >
               <option value="" disabled>
-                Select a customer
+                Select a farmer
               </option>
-              {customers.map((customer) => (
-                <option key={customer.id} value={customer.id}>
-                  {customer.name}
+              {farmers.map((farmer) => (
+                <option key={farmer.id} value={farmer.id}>
+                  {farmer.name}
                 </option>
               ))}
             </select>

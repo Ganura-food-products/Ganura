@@ -1,15 +1,15 @@
 'use client';
 
-import { CustomerField } from '@/app/lib/definitions';
+
 import Link from 'next/link';
 import { UserCircleIcon } from '@heroicons/react/24/outline';
 import { Button } from '@/app/ui/button';
-import { createFarmer, State } from '@/app/lib/actions';
+import { createSupervisor, SupervisorState } from '@/app/lib/actions';
 import { useActionState } from 'react';
 
-export default function Form({ customers }: { customers: CustomerField[] }) {
-  const initialState: State = { message: null, errors: {} };
-  const [state, formAction] = useActionState(createFarmer, initialState);
+export default function Form() {
+  const initialState: SupervisorState = { message: null, errors: {} };
+  const [state, formAction] = useActionState(createSupervisor, initialState);
   return (
     <form action={formAction}>
       <div className="rounded-md bg-gray-50 p-4 md:p-6">
@@ -235,16 +235,15 @@ export default function Form({ customers }: { customers: CustomerField[] }) {
             </div>
           </div>
         </div>
-        {/* add area(in Ha) field */}
       </div>
       <div className="mt-6 flex justify-end gap-4">
         <Link
-          href="/dashboard/leaders"
+          href="/dashboard/supervisors"
           className="flex h-10 items-center rounded-lg bg-gray-100 px-4 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200"
         >
           Cancel
         </Link>
-        <Button type="submit">Insert a Team Leader</Button>
+        <Button type="submit">Insert a supervisor</Button>
       </div>
     </form>
   );

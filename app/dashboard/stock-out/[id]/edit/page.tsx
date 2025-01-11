@@ -1,36 +1,37 @@
-import Form from '@/app/ui/farmers/edit-form';
+import Form from '@/app/ui/stock-out/edit-form';
 import Breadcrumbs from '@/app/ui/invoices/breadcrumbs';
 import {
   fetchCustomers,
-  fetchFarmerById,
-  fetchInvoiceById,
-  fetchLeaders,
+  fetchSaleById,
+  fetchProducts,
 } from '@/app/lib/data';
 import { notFound } from 'next/navigation';
 
 export default async function Page(props: { params: Promise<{ id: string }> }) {
   const params = await props.params;
   const id = params.id;
-  const [farmer, leaders] = await Promise.all([
-    fetchFarmerById(id),
-    fetchLeaders(),
+  const [sale, customers, products] = await Promise.all([
+    fetchSaleById(id),
+    fetchCustomers(),
+    fetchProducts(),
   ]);
-  if (!farmer) {
+  if (!sale) {
     notFound();
   }
   return (
     <main>
       <Breadcrumbs
         breadcrumbs={[
-          { label: 'Farmers', href: '/dashboard/farmers' },
+          { label: 'sales', href: '/dashboard/stock-out' },
           {
-            label: 'Edit Farmer',
-            href: `/dashboard/farmers/${id}/edit`,
+            label: 'Edit sales/stock-out',
+            href: `/dashboard/stock-out/${id}/edit`,
             active: true,
           },
         ]}
       />
-      <Form farmer={farmer} leaders={leaders} />
+      <Form sale={sale} customers={customers} products={products}/>
+      
     </main>
   );
 }

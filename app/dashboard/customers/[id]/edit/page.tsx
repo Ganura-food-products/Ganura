@@ -1,30 +1,32 @@
-import Form from '@/app/ui/supervisors/edit-form';
+import Form from '@/app/ui/customers/edit-form';
 import Breadcrumbs from '@/app/ui/invoices/breadcrumbs';
-import { fetchSupervisorById } from '@/app/lib/data';
+import {
+    fetchCustomerById
+} from '@/app/lib/data';
 import { notFound } from 'next/navigation';
 
 export default async function Page(props: { params: Promise<{ id: string }> }) {
   const params = await props.params;
   const id = params.id;
-  const [supervisor] = await Promise.all([
-    fetchSupervisorById(id)
+  const [customer] = await Promise.all([
+    fetchCustomerById(id)
   ]);
-  if (!supervisor) {
+  if (!customer) {
     notFound();
   }
   return (
     <main>
       <Breadcrumbs
         breadcrumbs={[
-          { label: 'Supervisors', href: '/dashboard/supervisors' },
+          { label: 'Customers', href: '/dashboard/customers' },
           {
-            label: 'Edit Supervisor',
-            href: `/dashboard/supervisors/${id}/edit`,
+            label: 'Edit Customer',
+            href: `/dashboard/customers/${id}/edit`,
             active: true,
           },
         ]}
       />
-      <Form supervisor={supervisor} />
+      <Form customer= {customer} />
     </main>
   );
 }

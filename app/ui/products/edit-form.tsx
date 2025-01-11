@@ -1,6 +1,6 @@
 'use client';
 
-import { CustomerField, InvoiceForm } from '@/app/lib/definitions';
+
 import {
   CheckIcon,
   ClockIcon,
@@ -9,64 +9,110 @@ import {
 } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { Button } from '@/app/ui/button';
-import { State, updateInvoice } from '@/app/lib/actions';
+import { ProductState, updateProduct } from '@/app/lib/actions';
 import { useActionState } from 'react';
-
-export default function EditInvoiceForm({
-  invoice,
-  customers,
+import { ProductsTableType } from '@/app/lib/definitions';
+import { ScaleIcon } from '@heroicons/react/24/solid';
+export default function Form({
+  product
 }: {
-  invoice: InvoiceForm;
-  customers: CustomerField[];
+  product : ProductsTableType
 }) {
-  const initialState: State = { message: null, errors: {} };
-  const updateInvoiceWithId = updateInvoice.bind(null, invoice.id);
-  const [state, formAction] = useActionState(updateInvoiceWithId, initialState);
+  const initialState: ProductState = { message: null, errors: {} };
+  const updateProductWithId = updateProduct.bind(null, product.id);
+  const [state, formAction] = useActionState(updateProductWithId, initialState);
   return (
     <form action={formAction}>
       <div className="rounded-md bg-gray-50 p-4 md:p-6">
-        {/* Customer Name */}
+        
+
+        {/* Product name with an icon related to it, use the text input type */}
         <div className="mb-4">
-          <label htmlFor="customer" className="mb-2 block text-sm font-medium">
-            Choose customer
+          <label htmlFor="name" className="mb-2 block text-sm font-medium">
+            Choose product name
           </label>
           <div className="relative">
-            <select
-              id="customer"
-              name="customerId"
-              className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
-              defaultValue={invoice.customer_id}
-            >
-              <option value="" disabled>
-                Select a customer
-              </option>
-              {customers.map((customer) => (
-                <option key={customer.id} value={customer.id}>
-                  {customer.name}
-                </option>
-              ))}
-            </select>
-            <UserCircleIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
+            <input
+              id="name"
+              name="name"
+              type="text"
+              placeholder="Enter product name"
+              className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
+              aria-describedby="product-error"
+              defaultValue={product.name}
+            />
+            <CheckIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
+            <div id="product-error" aria-live="polite" aria-atomic="true">
+              {state.errors?.name &&
+                state.errors.name.map((error: string) => (
+                  <p className="mt-2 text-sm text-red-500" key={error}>
+                    {error}
+                  </p>
+                ))}
+            </div>
           </div>
         </div>
 
         {/* Invoice Amount */}
         <div className="mb-4">
-          <label htmlFor="amount" className="mb-2 block text-sm font-medium">
-            Choose an amount
+          <label
+            htmlFor="purchase_unit_price"
+            className="mb-2 block text-sm font-medium"
+          >
+            Choose Purchase Unit price
           </label>
           <div className="relative mt-2 rounded-md">
             <div className="relative">
               <input
-                id="amount"
-                name="amount"
+                id="purchase_unit_price"
+                name="purchase_unit_price"
                 type="number"
                 step="0.01"
-                defaultValue={invoice.amount}
-                placeholder="Enter USD amount"
+                placeholder="Enter RWF amount"
                 className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
+                aria-describedby="amount-error"
+                defaultValue={product.purchase_unit_price}
               />
               <CurrencyDollarIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
+              <div id="amount-error" aria-live="polite" aria-atomic="true">
+                {state.errors?.purchase_unit_price &&
+                  state.errors.purchase_unit_price.map((error: string) => (
+                    <p className="mt-2 text-sm text-red-500" key={error}>
+                      {error}
+                    </p>
+                  ))}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="mb-4">
+          <label
+            htmlFor="sale_unit_price"
+            className="mb-2 block text-sm font-medium"
+          >
+            Choose Sale Unit Price
+          </label>
+          <div className="relative mt-2 rounded-md">
+            <div className="relative">
+              <input
+                id="sale_unit_price"
+                name="sale_unit_price"
+                type="number"
+                step="0.01"
+                placeholder="Enter RWF amount"
+                className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
+                aria-describedby="amount-error"
+                defaultValue={product.sale_unit_price}
+              />
+              <CurrencyDollarIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
+              <div id="amount-error" aria-live="polite" aria-atomic="true">
+                {state.errors?.sale_unit_price &&
+                  state.errors.sale_unit_price.map((error: string) => (
+                    <p className="mt-2 text-sm text-red-500" key={error}>
+                      {error}
+                    </p>
+                  ))}
+              </div>
             </div>
           </div>
         </div>
@@ -74,54 +120,63 @@ export default function EditInvoiceForm({
         {/* Invoice Status */}
         <fieldset>
           <legend className="mb-2 block text-sm font-medium">
-            Set the invoice status
+            Set the product measurement unit
           </legend>
           <div className="rounded-md border border-gray-200 bg-white px-[14px] py-3">
             <div className="flex gap-4">
               <div className="flex items-center">
                 <input
                   id="pending"
-                  name="status"
+                  name="unit"
                   type="radio"
-                  value="pending"
-                  defaultChecked={invoice.status === 'pending'}
+                  value="KG"
                   className="h-4 w-4 cursor-pointer border-gray-300 bg-gray-100 text-gray-600 focus:ring-2"
+                  aria-describedby="status-error"
+                  defaultChecked={product.unit === "KG"}
                 />
                 <label
                   htmlFor="pending"
                   className="ml-2 flex cursor-pointer items-center gap-1.5 rounded-full bg-gray-100 px-3 py-1.5 text-xs font-medium text-gray-600"
                 >
-                  Pending <ClockIcon className="h-4 w-4" />
+                  Kilograms(KG) <ScaleIcon className="h-4 w-4" />
                 </label>
               </div>
               <div className="flex items-center">
                 <input
                   id="paid"
-                  name="status"
+                  name="unit"
                   type="radio"
-                  value="paid"
-                  defaultChecked={invoice.status === 'paid'}
+                  value="L"
+                  defaultChecked={product.unit === "L"}
                   className="h-4 w-4 cursor-pointer border-gray-300 bg-gray-100 text-gray-600 focus:ring-2"
                 />
                 <label
                   htmlFor="paid"
                   className="ml-2 flex cursor-pointer items-center gap-1.5 rounded-full bg-green-500 px-3 py-1.5 text-xs font-medium text-white"
                 >
-                  Paid <CheckIcon className="h-4 w-4" />
+                  Liters(L) <ScaleIcon className="h-4 w-4" />
                 </label>
               </div>
             </div>
+          </div>
+          <div id="status-error" aria-live="polite" aria-atomic="true">
+            {state.errors?.unit &&
+              state.errors.unit.map((error: string) => (
+                <p className="mt-2 text-sm text-red-500" key={error}>
+                  {error}
+                </p>
+              ))}
           </div>
         </fieldset>
       </div>
       <div className="mt-6 flex justify-end gap-4">
         <Link
-          href="/dashboard/invoices"
+          href="/dashboard/products"
           className="flex h-10 items-center rounded-lg bg-gray-100 px-4 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200"
         >
           Cancel
         </Link>
-        <Button type="submit">Edit Invoice</Button>
+        <Button type="submit">Edit Product</Button>
       </div>
     </form>
   );
