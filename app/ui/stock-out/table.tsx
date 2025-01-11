@@ -36,7 +36,7 @@ export default async function InvoicesTable({
                 <div className="flex w-full items-center justify-between pt-4">
                   <div>
                     <p className="text-xl font-medium">{sale.product}</p>
-                    <p>{sale.quantity}</p>
+                    <p className="text-sm text-gray-500">Quantity (Kg) : {sale.quantity}</p>
                     <p>
                       {sale.date
                         ? new Date(sale.date).toLocaleDateString()

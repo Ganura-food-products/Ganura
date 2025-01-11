@@ -1,12 +1,12 @@
-import Image from 'next/image';
-import { UpdateProduct, DeleteProduct } from '@/app/ui/products/buttons';
+import Image from "next/image";
+import { UpdateProduct, DeleteProduct } from "@/app/ui/products/buttons";
 // import InvoiceStatus from '@/app/ui/invoices/status';
 import {
   formatDateToLocal,
   formatCurrency,
   formatNumber,
-} from '@/app/lib/utils';
-import { fetchFilteredProducts } from '@/app/lib/data';
+} from "@/app/lib/utils";
+import { fetchFilteredProducts } from "@/app/lib/data";
 
 export default async function InvoicesTable({
   query,
@@ -15,7 +15,6 @@ export default async function InvoicesTable({
   query: string;
   currentPage: number;
 }) {
-  
   const products = await fetchFilteredProducts(query, currentPage);
 
   return (
@@ -30,17 +29,26 @@ export default async function InvoicesTable({
               >
                 <div className="flex items-center justify-between border-b pb-4">
                   <div>
-                    {/* <div className="mb-2 flex items-center">
-                      <Image
+                    <div className="mb-2 gap-4 flex items-center">
+                      {/* <Image
                         src={invoice.image_url}
                         className="mr-2 rounded-full"
                         width={28}
                         height={28}
                         alt={`${invoice.name}'s profile picture`}
-                      />
+                      /> */}
                       <p>{invoice.name}</p>
-                    </div> */}
-                    <p className="text-sm text-gray-500">{invoice.name}</p>
+                      <div className="flex justify-end gap-3">
+                        <UpdateProduct id={invoice.id} />
+                        <DeleteProduct id={invoice.id} />
+                      </div>
+                    </div>
+                    <p className="text-sm text-gray-500">
+                      sale-price : {invoice.sale_unit_price}
+                    </p>
+                    <p className="text-sm text-gray-500">
+                      purchase-price : {invoice.purchase_unit_price}
+                    </p>
                   </div>
                   {/* <InvoiceStatus status={invoice.status} /> */}
                 </div>
@@ -90,10 +98,10 @@ export default async function InvoicesTable({
                     {product.name}
                   </td>
                   <td className="whitespace-nowrap px-3 py-3">
-                    RWF {(product.purchase_unit_price).toLocaleString('en-US')}
+                    RWF {product.purchase_unit_price.toLocaleString("en-US")}
                   </td>
                   <td className="whitespace-nowrap px-3 py-3">
-                    RWF {(product.sale_unit_price).toLocaleString('en-US')}
+                    RWF {product.sale_unit_price.toLocaleString("en-US")}
                   </td>
 
                   <td className="whitespace-nowrap px-3 py-3">

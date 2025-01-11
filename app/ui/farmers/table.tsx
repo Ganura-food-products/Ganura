@@ -1,17 +1,17 @@
-import Image from 'next/image';
-import { lusitana } from '@/app/ui/fonts';
-import Search from '@/app/ui/search';
+import Image from "next/image";
+import { lusitana } from "@/app/ui/fonts";
+import Search from "@/app/ui/search";
 import {
   CustomersTableType,
   FormattedCustomersTable,
-} from '@/app/lib/definitions';
+} from "@/app/lib/definitions";
 import {
   fetchFilteredCustomers,
   fetchFarmers,
   fetchFilteredFarmers,
-} from '@/app/lib/data';
-import { UpdateInvoice, DeleteInvoice } from '@/app/ui/customers/buttons';
-import { DeleteFarmer, UpdateFarmer } from './buttons';
+} from "@/app/lib/data";
+import { UpdateInvoice, DeleteInvoice } from "@/app/ui/customers/buttons";
+import { DeleteFarmer, UpdateFarmer } from "./buttons";
 
 export default async function CustomersTable({
   query,
@@ -38,8 +38,12 @@ export default async function CustomersTable({
                     <div className="flex items-center justify-between border-b pb-4">
                       <div>
                         <div className="mb-2 flex items-center">
-                          <div className="flex items-center gap-3">
+                          <div className="flex items-center gap-3 justify-between">
                             <p>{farmer.name}</p>
+                            <div className="flex justify-end gap-3">
+                              <UpdateFarmer id={farmer.id} />
+                              <DeleteFarmer id={farmer.id} />
+                            </div>
                           </div>
                         </div>
                         <p className="text-sm text-gray-500">

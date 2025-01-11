@@ -1,12 +1,12 @@
-import Image from 'next/image';
-import { lusitana } from '@/app/ui/fonts';
-import Search from '@/app/ui/search';
+import Image from "next/image";
+import { lusitana } from "@/app/ui/fonts";
+import Search from "@/app/ui/search";
 import {
   CustomersTableType,
   FormattedCustomersTable,
-} from '@/app/lib/definitions';
-import { fetchFilteredCustomers } from '@/app/lib/data';
-import { UpdateInvoice, DeleteInvoice } from '@/app/ui/customers/buttons';
+} from "@/app/lib/definitions";
+import { fetchFilteredCustomers } from "@/app/lib/data";
+import { UpdateInvoice, DeleteInvoice } from "@/app/ui/customers/buttons";
 
 export default async function CustomersTable({
   query,
@@ -58,8 +58,14 @@ export default async function CustomersTable({
                         <p className="font-medium">{customer.total_paid}</p>
                       </div>
                     </div>
-                    <div className="pt-4 text-sm">
-                      <p>{customer.total_invoices} invoices</p>
+                    <div className="flex justify-between items-center py-5">
+                      <div className=" text-sm">
+                        <p>{customer.total_invoices} invoices</p>
+                      </div>
+                      <div className="flex gap-3">
+                        <UpdateInvoice id={customer.id} />
+                        <DeleteInvoice id={customer.id} />
+                      </div>
                     </div>
                   </div>
                 ))}
