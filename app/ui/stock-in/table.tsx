@@ -1,12 +1,11 @@
-
-import { UpdateInvoice, DeleteGoods } from '@/app/ui/stock-in/buttons';
+import { UpdateInvoice, DeleteGoods } from "@/app/ui/stock-in/buttons";
 
 import {
   fetchFilteredInvoices,
   fetchFilteredGoods,
   fetchProducts,
-} from '@/app/lib/data';
-import { DownloadGoods } from './DownloadGoods';
+} from "@/app/lib/data";
+import { DownloadGoods } from "./DownloadGoods";
 
 export default async function InvoicesTable({
   query,
@@ -33,16 +32,20 @@ export default async function InvoicesTable({
                     <div className="mb-2 flex items-center">
                       <p>{good.supplier}</p>
                     </div>
-                    <p className="text-sm text-gray-500">{good.product}</p>
+                    <div className="flex items-center gap-2">
+                      <p className="text-sm text-gray-500">{good.product}</p>
+                      <p className="text-sm text-gray-500">Quantity (Kg):</p>
+                      <p className="text-md text-gray-900">{good.quantity}</p>
+                    </div>
                   </div>
                 </div>
                 <div className="flex w-full items-center justify-between pt-4">
                   <div>
                     <p>
-                      {' '}
+                      {" "}
                       {good.date
                         ? new Date(good.date).toLocaleDateString()
-                        : ''}
+                        : ""}
                     </p>
                   </div>
                   <div className="flex justify-end gap-2">
@@ -91,10 +94,10 @@ export default async function InvoicesTable({
                   </td>
 
                   <td className="whitespace-nowrap px-3 py-3">
-                    {' '}
+                    {" "}
                     {stock.date
                       ? new Date(stock.date).toLocaleDateString()
-                      : ''}
+                      : ""}
                   </td>
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
                     <div className="flex justify-end gap-3">

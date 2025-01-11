@@ -1,10 +1,6 @@
-
-import {
-
-  fetchFilteredLeaders
-} from '@/app/lib/data';
+import { fetchFilteredLeaders } from "@/app/lib/data";
 // import { UpdateInvoice, DeleteInvoice } from '@/app/ui/customers/buttons';
-import { UpdateFarmer, DeleteFarmer } from './buttons';
+import { UpdateFarmer, DeleteFarmer } from "./buttons";
 
 export default async function CustomersTable({
   query,
@@ -23,8 +19,8 @@ export default async function CustomersTable({
         <div className="overflow-x-auto">
           <div className="inline-block min-w-full align-middle">
             <div className="overflow-hidden rounded-md bg-gray-50 p-2 md:pt-0">
-              {/* <div className="md:hidden">
-                {customers?.map((customer) => (
+              <div className="md:hidden">
+                {leaders?.map((customer) => (
                   <div
                     key={customer.id}
                     className="mb-2 w-full rounded-md bg-white p-4"
@@ -33,37 +29,43 @@ export default async function CustomersTable({
                       <div>
                         <div className="mb-2 flex items-center">
                           <div className="flex items-center gap-3">
-                            <Image
+                            {/* <Image
                               src={customer.image_url}
                               className="rounded-full"
                               alt={`${customer.name}'s profile picture`}
                               width={28}
                               height={28}
-                            />
-                            <p>{customer.name}</p>
+                            /> */}
+                            <p>
+                              {customer.name} /
+                            </p>
+                            <div className="flex justify-end gap-3">
+                              <UpdateFarmer id={customer.id} />
+                              <DeleteFarmer id={customer.id} />
+                            </div>
                           </div>
                         </div>
-                        <p className="text-sm text-gray-500">
-                          {customer.email}
+                        <p className="text-sm text-gray-800">
+                          {customer.phone_number}
                         </p>
                       </div>
                     </div>
                     <div className="flex w-full items-center justify-between border-b py-5">
                       <div className="flex w-1/2 flex-col">
-                        <p className="text-xs">Pending</p>
-                        <p className="font-medium">{customer.total_pending}</p>
+                        <p className="text-xs">supervisor</p>
+                        <p className="font-medium">{customer.supervisor_id}</p>
                       </div>
-                      <div className="flex w-1/2 flex-col">
+                      {/* <div className="flex w-1/2 flex-col">
                         <p className="text-xs">Paid</p>
                         <p className="font-medium">{customer.total_paid}</p>
-                      </div>
+                      </div> */}
                     </div>
                     <div className="pt-4 text-sm">
-                      <p>{customer.total_invoices} invoices</p>
+                      {/* <p>{customer.total_invoices} invoices</p> */}
                     </div>
                   </div>
                 ))}
-              </div> */}
+              </div>
               <table className="hidden min-w-full rounded-md text-gray-900 md:table">
                 <thead className="rounded-md bg-gray-50 text-left text-sm font-normal">
                   <tr>
@@ -85,7 +87,7 @@ export default async function CustomersTable({
                     <th scope="col" className="px-4 py-5 font-medium">
                       Field Supervisor
                     </th>
-                    
+
                     <th scope="col" className="relative py-3 pl-6 pr-3">
                       <span className="sr-only">Edit</span>
                     </th>
