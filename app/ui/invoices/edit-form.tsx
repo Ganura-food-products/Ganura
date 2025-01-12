@@ -1,17 +1,17 @@
-'use client';
+"use client";
 
-import { FarmerField, InvoiceForm } from '@/app/lib/definitions';
+import { FarmerField, InvoiceForm } from "@/app/lib/definitions";
 import {
   CheckIcon,
   ClockIcon,
   CurrencyDollarIcon,
   UserCircleIcon,
-} from '@heroicons/react/24/outline';
-import Link from 'next/link';
-import { Button } from '@/app/ui/button';
-import { newState, updateInvoice } from '@/app/lib/actions';
-import { useActionState } from 'react';
-
+} from "@heroicons/react/24/outline";
+import Link from "next/link";
+import { Button } from "@/app/ui/button";
+import { newState, updateInvoice } from "@/app/lib/actions";
+import { useActionState, useState } from "react";
+import { Autocomplete, AutocompleteItem } from "@nextui-org/autocomplete";
 export default function EditInvoiceForm({
   invoice,
   farmers,
@@ -22,6 +22,7 @@ export default function EditInvoiceForm({
   const initialState: newState = { message: null, errors: {} };
   const updateInvoiceWithId = updateInvoice.bind(null, invoice.id);
   const [state, formAction] = useActionState(updateInvoiceWithId, initialState);
+  const [selectedFarmerId, setSelectedFarmerId] = useState("");
   return (
     <form action={formAction}>
       <div className="rounded-md bg-gray-50 p-4 md:p-6">
@@ -30,7 +31,27 @@ export default function EditInvoiceForm({
             Choose farmer
           </label>
           <div className="relative">
-            <select
+            <Autocomplete
+              placeholder="Choose farmer"
+              defaultSelectedKey={invoice.customer_id}
+              onSelectionChange={(key) => {
+                setSelectedFarmerId(key as string);
+              }}
+            >
+              {farmers.map((leader) => (
+                <AutocompleteItem key={leader.id} value={leader.id}>
+                  {leader.name}
+                </AutocompleteItem>
+              ))}
+            </Autocomplete>
+            <input
+              id="farmer"
+              aria-describedby="farmer-error"
+              type="hidden"
+              name="farmerId"
+              value={selectedFarmerId}
+            />
+            {/* <select
               id="farmer"
               name="farmerId"
               className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
@@ -44,7 +65,7 @@ export default function EditInvoiceForm({
                   {farmer.name}
                 </option>
               ))}
-            </select>
+            </select> */}
             <UserCircleIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
           </div>
         </div>
@@ -81,7 +102,7 @@ export default function EditInvoiceForm({
                   name="status"
                   type="radio"
                   value="pending"
-                  defaultChecked={invoice.status === 'pending'}
+                  defaultChecked={invoice.status === "pending"}
                   className="h-4 w-4 cursor-pointer border-gray-300 bg-gray-100 text-gray-600 focus:ring-2"
                 />
                 <label
@@ -97,7 +118,7 @@ export default function EditInvoiceForm({
                   name="status"
                   type="radio"
                   value="paid"
-                  defaultChecked={invoice.status === 'paid'}
+                  defaultChecked={invoice.status === "paid"}
                   className="h-4 w-4 cursor-pointer border-gray-300 bg-gray-100 text-gray-600 focus:ring-2"
                 />
                 <label

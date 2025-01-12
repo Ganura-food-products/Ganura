@@ -128,7 +128,7 @@ export type State = {
 };
 export type newState = {
   errors?: {
-    farmer?: string[];
+    farmerId?: string[];
     amount?: string[];
     status?: string[];
   };
