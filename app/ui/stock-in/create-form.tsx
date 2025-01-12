@@ -1,15 +1,15 @@
-'use client';
+"use client";
 
-import { FarmerField, ProductField } from '@/app/lib/definitions';
-import Link from 'next/link';
+import { FarmerField, ProductField } from "@/app/lib/definitions";
+import Link from "next/link";
 import {
   CurrencyDollarIcon,
   UserCircleIcon,
-} from '@heroicons/react/24/outline';
-import { Button } from '@/app/ui/button';
-import { GoodsState, createGoods } from '@/app/lib/actions';
-import { useActionState } from 'react';
-// import { Autocomplete, AutocompleteItem } from '@nextui-org/autocomplete';
+} from "@heroicons/react/24/outline";
+import { Button } from "@/app/ui/button";
+import { GoodsState, createGoods } from "@/app/lib/actions";
+import { useActionState, useState } from "react";
+import { Autocomplete, AutocompleteItem } from "@nextui-org/autocomplete";
 
 export default function Form({
   farmers,
@@ -20,6 +20,7 @@ export default function Form({
 }) {
   const initialState: GoodsState = { message: null, errors: {} };
   const [state, formAction] = useActionState(createGoods, initialState);
+
   return (
     <form action={formAction}>
       <div className="rounded-md bg-gray-50 p-4 md:p-6">
@@ -28,18 +29,22 @@ export default function Form({
             Choose Farmer
           </label>
           <div className="relative">
-            {/* <Autocomplete
-              name="supplier"
-              className="peer block w-full cursor-pointer rounded-md border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
+            <Autocomplete
+              id="supplier"
               aria-describedby="customer-error"
+              
+              name="supplier"
+              placeholder="Choose farmer"
+              
             >
-              {farmers.map((farmer) => (
-                <AutocompleteItem key={farmer.id} value={farmer.name}>
-                  {farmer.name}
+              {farmers.map((leader) => (
+                <AutocompleteItem key={leader.id} value={leader.name}>
+                  {leader.name}
                 </AutocompleteItem>
               ))}
-            </Autocomplete> */}
-            <select
+            </Autocomplete>
+            
+            {/* <select
               id="supplier"
               name="supplier"
               className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
@@ -54,7 +59,7 @@ export default function Form({
                   {farmer.name}
                 </option>
               ))}
-            </select>
+            </select> */}
             <UserCircleIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
             <div id="customer-error" aria-live="polite" aria-atomic="true">
               {state.errors?.supplier &&

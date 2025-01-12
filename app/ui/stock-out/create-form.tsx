@@ -1,15 +1,15 @@
-'use client';
+"use client";
 
-import { CustomerField, ProductField } from '@/app/lib/definitions';
-import Link from 'next/link';
+import { CustomerField, ProductField } from "@/app/lib/definitions";
+import Link from "next/link";
 import {
   CurrencyDollarIcon,
   UserCircleIcon,
-} from '@heroicons/react/24/outline';
-import { Button } from '@/app/ui/button';
-import { SalesState, createSales } from '@/app/lib/actions';
-import { useActionState } from 'react';
-
+} from "@heroicons/react/24/outline";
+import { Button } from "@/app/ui/button";
+import { SalesState, createSales } from "@/app/lib/actions";
+import { useActionState } from "react";
+import { Autocomplete, AutocompleteItem } from "@nextui-org/autocomplete";
 export default function Form({
   customers,
   products,
@@ -27,7 +27,20 @@ export default function Form({
             Choose Customer
           </label>
           <div className="relative">
-            <select
+            <Autocomplete
+              id="customer"
+              aria-describedby="customer-error"
+              name="customer"
+              placeholder="Choose customer"
+            >
+              {customers.map((leader) => (
+                <AutocompleteItem key={leader.id} value={leader.name}>
+                  {leader.name}
+                </AutocompleteItem>
+              ))}
+            </Autocomplete>
+
+            {/* <select
               id="customer"
               name="customer"
               className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
@@ -42,7 +55,7 @@ export default function Form({
                   {customer.name}
                 </option>
               ))}
-            </select>
+            </select> */}
             <UserCircleIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
             <div id="customer-error" aria-live="polite" aria-atomic="true">
               {state.errors?.customer &&

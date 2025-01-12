@@ -1,11 +1,12 @@
-'use client';
+"use client";
 
-import { FarmerForm, LeaderField } from '@/app/lib/definitions';
-import { UserCircleIcon } from '@heroicons/react/24/outline';
-import Link from 'next/link';
-import { Button } from '@/app/ui/button';
-import { FarmerState, updateFarmer } from '@/app/lib/actions';
-import { useActionState } from 'react';
+import { FarmerForm, LeaderField } from "@/app/lib/definitions";
+import { UserCircleIcon } from "@heroicons/react/24/outline";
+import Link from "next/link";
+import { Button } from "@/app/ui/button";
+import { FarmerState, updateFarmer } from "@/app/lib/actions";
+import { Autocomplete, AutocompleteItem } from "@nextui-org/autocomplete";
+import { useActionState } from "react";
 
 export default function EditFarmerForm({
   farmer,
@@ -20,6 +21,7 @@ export default function EditFarmerForm({
     updateFarmerWithId,
     initialState
   );
+  console.table(farmer)
   return (
     <form action={formAction}>
       <div className="rounded-md bg-gray-50 p-4 md:p-6">
@@ -289,6 +291,8 @@ export default function EditFarmerForm({
             Choose team leader
           </label>
           <div className="relative">
+            
+
             <select
               id="team_leader"
               name="team_leader_id"

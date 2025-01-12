@@ -10,12 +10,16 @@ import {
 } from "@heroicons/react/24/outline";
 import { Button } from "@/app/ui/button";
 import { createInvoice, newState } from "@/app/lib/actions";
-import { useActionState } from "react";
+import { useActionState, useState, useMemo } from "react";
 import { Autocomplete, AutocompleteItem } from "@nextui-org/autocomplete";
 
 export default function Form({ farmers }: { farmers: FarmerField[] }) {
   const initialState: newState = { message: null, errors: {} };
   const [state, formAction] = useActionState(createInvoice, initialState);
+  const [selectedFarmerId, setSelectedFarmerId] = useState("");
+
+  
+
   return (
     <form action={formAction}>
       <div className="rounded-md bg-gray-50 p-4 md:p-6">
@@ -25,11 +29,8 @@ export default function Form({ farmers }: { farmers: FarmerField[] }) {
           </label>
           <div className="relative">
             <Autocomplete
-              id="farmer"
-              name="farmerId"
-              
-              placeholder="Choose team leader"
-              aria-describedby="farmer-error"
+              placeholder="Choose farmer"
+              onSelectionChange = {(key) => {setSelectedFarmerId(key as string)}}
             >
               {farmers.map((leader) => (
                 <AutocompleteItem key={leader.id} value={leader.id}>
@@ -37,7 +38,13 @@ export default function Form({ farmers }: { farmers: FarmerField[] }) {
                 </AutocompleteItem>
               ))}
             </Autocomplete>
-
+            <input
+              id="farmer"
+              aria-describedby="farmer-error"
+              type="hidden"
+              name="farmerId"
+              value={selectedFarmerId}
+            />
             {/* <select
               id="farmer"
               name="farmerId"
