@@ -44,7 +44,7 @@ const links = [
     href: '/dashboard/products',
     icon: DocumentDuplicateIcon,
   },
-  { name: 'Settings', href: '/dashboard/settings', icon: CogIcon },
+  // { name: 'Settings', href: '/dashboard/settings', icon: CogIcon },
   { name: 'Users', href: '/dashboard/users', icon: UserGroupIcon },
 ];
 
