@@ -1,11 +1,11 @@
-'use client';
+"use client";
 
-import { CustomerField, LeaderField } from '@/app/lib/definitions';
-import Link from 'next/link';
-import { UserCircleIcon } from '@heroicons/react/24/outline';
-import { Button } from '@/app/ui/button';
-import { createLeader, LeaderState } from '@/app/lib/actions';
-import { useActionState } from 'react';
+import { CustomerField, LeaderField } from "@/app/lib/definitions";
+import Link from "next/link";
+import { UserCircleIcon } from "@heroicons/react/24/outline";
+import { Button } from "@/app/ui/button";
+import { createLeader, LeaderState } from "@/app/lib/actions";
+import { useActionState } from "react";
 
 export default function Form({ supervisor }: { supervisor: LeaderField[] }) {
   const initialState: LeaderState = { message: null, errors: {} };
@@ -244,9 +244,10 @@ export default function Form({ supervisor }: { supervisor: LeaderField[] }) {
             <select
               id="customer"
               name="supervisor_id"
+              aria-describedby="supervisor_id-error"
               className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
             >
-              <option value="" disabled>
+              <option value="" hidden>
                 Select a Field Supervisor
               </option>
               {supervisor.map((customer) => (
@@ -256,6 +257,16 @@ export default function Form({ supervisor }: { supervisor: LeaderField[] }) {
               ))}
             </select>
             <UserCircleIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
+
+
+            <div id="supervisor_id-error" aria-live="polite" aria-atomic="true">
+              {state.errors?.supervisor_id &&
+                state.errors.supervisor_id.map((error: string) => (
+                  <p className="mt-2 text-sm text-red-500" key={error}>
+                    {error}
+                  </p>
+                ))}
+            </div>
           </div>
         </div>
       </div>

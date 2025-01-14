@@ -23,43 +23,47 @@ const FormSchema = z.object({
 
 const FarmerSchema = z.object({
   id: z.string(),
-  name: z.string(),
-  id_number: z.string(),
-  phone_number: z.string(),
-  city: z.string(),
-  district: z.string(),
-  sector: z.string(),
-  cell: z.string(),
-  village: z.string(),
-  team_leader_id: z.string(),
+  name: z.string().min(1, "Name cannot be empty"),
+  id_number: z.string().min(10, "ID must be at least 10 characters long"),
+  phone_number: z
+    .string()
+    .min(8, "Phone number must be at least 8 characters long"),
+  city: z.string().min(1, "city cannot be empty"),
+  district: z.string().min(1, "district cannot be empty"),
+  sector: z.string().min(1, "sector cannot be empty"),
+  cell: z.string().min(1, "cell cannot be empty"),
+  village: z.string().min(1, "village cannot be empty"),
+  team_leader_id: z.string().min(1, "team leader must be selected cannot be empty"),
   date: z.string(),
-  area: z.string(),
+  area: z.coerce
+    .number()
+    .gt(0, { message: "Please enter an area greater than 0." }),
 });
 
 const LeaderSchema = z.object({
   id: z.string(),
-  name: z.string(),
-  id_number: z.string(),
-  phone_number: z.string(),
-  city: z.string(),
-  district: z.string(),
-  sector: z.string(),
-  cell: z.string(),
-  village: z.string(),
-  supervisor_id: z.string(),
+  name: z.string().min(1, "Name cannot be empty"),
+  id_number: z.string().min(10, "ID must be at least 10 characters long"),
+  phone_number: z.string().min(8, "Phone number must be at least 8 characters long"),
+  city: z.string().min(1, "city cannot be empty"),
+  district: z.string().min(1, "district cannot be empty"),
+  sector: z.string().min(1, "sector cannot be empty"),
+  cell: z.string().min(1, "cell cannot be empty"),
+  village: z.string().min(1, "village cannot be empty"),
+  supervisor_id: z.string().min(1, "please choose"),
   date: z.string(),
 });
 
 const SupervisorSchema = z.object({
   id: z.string(),
-  name: z.string(),
-  id_number: z.string(),
-  phone_number: z.string(),
-  city: z.string(),
-  district: z.string(),
-  sector: z.string(),
-  cell: z.string(),
-  village: z.string(),
+  name: z.string().min(1, "Name cannot be empty"),
+  id_number: z.string().min(8, "id must be at least 8 characters long"),
+  phone_number: z.string().min(8, "Phone number must be at least 8 characters long"),
+  city: z.string().min(1, "city cannot be empty"),
+  district: z.string().min(1, "district cannot be empty"),
+  sector: z.string().min(1, "sector cannot be empty"),
+  cell: z.string().min(1, "cell cannot be empty"),
+  village: z.string().min(1, "village cannot be empty"),
 
   date: z.string(),
 });
@@ -99,8 +103,8 @@ const SalesSchema = z.object({
 
 const CustomersSchema = z.object({
   id: z.string(),
-  name: z.string(),
-  email: z.string(),
+  name: z.string().min(1, "Name cannot be empty"),
+  email: z.string().email("Invalid email address"),
   image_url: z.string(),
 });
 
@@ -738,7 +742,10 @@ export async function deleteSupervisor(id: string) {
   }
 }
 
-export async function createProduct(prevState: ProductState, formData: FormData) {
+export async function createProduct(
+  prevState: ProductState,
+  formData: FormData
+) {
   const validatedFields = CreateProduct.safeParse({
     name: formData.get("name"),
     purchase_unit_price: formData.get("purchase_unit_price"),
