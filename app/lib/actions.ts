@@ -14,7 +14,7 @@ const FormSchema = z.object({
   }),
   amount: z.coerce
     .number()
-    .gt(0, { message: "Please enter an amount greater than $0." }),
+    .gt(0, { message: "Please enter an amount greater than RFW0." }),
   status: z.enum(["pending", "paid"], {
     invalid_type_error: "Please select an invoice status.",
   }),
@@ -73,10 +73,10 @@ const ProductSchema = z.object({
   name: z.string(),
   purchase_unit_price: z.coerce
     .number()
-    .gt(0, { message: "Please enter a purchase price greater than $0." }),
+    .gt(0, { message: "Please enter a purchase price greater than RFW0." }),
   sale_unit_price: z.coerce
     .number()
-    .gt(0, { message: "Please enter a sale price greater than $0." }),
+    .gt(0, { message: "Please enter a sale price greater than RFW0." }),
   unit: z.string(),
   date: z.string(),
 });
