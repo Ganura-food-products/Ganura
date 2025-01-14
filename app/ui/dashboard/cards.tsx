@@ -4,10 +4,10 @@ import {
   UserGroupIcon,
   InboxIcon,
   TruckIcon,
-} from '@heroicons/react/24/outline';
-import { montserrat } from '@/app/ui/fonts';
+} from "@heroicons/react/24/outline";
+import { montserrat } from "@/app/ui/fonts";
 
-import { fetchCardData } from '@/app/lib/data';
+import { fetchCardData } from "@/app/lib/data";
 
 const iconMap = {
   collected: BanknotesIcon,
@@ -55,7 +55,7 @@ export function Card({
 }: {
   title: string;
   value: number | string;
-  type: 'invoices' | 'customers' | 'pending' | 'collected';
+  type: "invoices" | "customers" | "pending" | "collected" | "Stock";
 }) {
   const Icon = iconMap[type];
 
