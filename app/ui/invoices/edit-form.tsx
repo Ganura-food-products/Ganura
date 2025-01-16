@@ -22,7 +22,7 @@ export default function EditInvoiceForm({
   const initialState: newState = { message: null, errors: {} };
   const updateInvoiceWithId = updateInvoice.bind(null, invoice.id);
   const [state, formAction] = useActionState(updateInvoiceWithId, initialState);
-  const [selectedFarmerId, setSelectedFarmerId] = useState("");
+  const [selectedFarmerId, setSelectedFarmerId] = useState(invoice.customer_id || "");
   return (
     <form action={formAction}>
       <div className="rounded-md bg-gray-50 p-4 md:p-6">
@@ -33,6 +33,7 @@ export default function EditInvoiceForm({
           <div className="relative">
             <Autocomplete
               placeholder="Choose farmer"
+              selectedKey={selectedFarmerId || invoice.customer_id}
               defaultSelectedKey={invoice.customer_id}
               onSelectionChange={(key) => {
                 setSelectedFarmerId(key as string);
@@ -49,7 +50,7 @@ export default function EditInvoiceForm({
               aria-describedby="farmer-error"
               type="hidden"
               name="farmerId"
-              value={selectedFarmerId}
+              value={selectedFarmerId || invoice.customer_id}
             />
             {/* <select
               id="farmer"
