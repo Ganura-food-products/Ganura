@@ -139,6 +139,7 @@ export type FarmersTableType = {
   village: string;
   cell: string;
   team_leader_id: string;
+  field_supervisor: string;
   area: number;
 };
 

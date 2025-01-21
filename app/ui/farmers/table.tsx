@@ -91,6 +91,9 @@ export default async function CustomersTable({
                       Team Leader
                     </th>
                     <th scope="col" className="px-4 py-5 font-medium">
+                      Field Supervisor
+                    </th>
+                    <th scope="col" className="px-4 py-5 font-medium">
                       Provided Stock(KG)
                     </th>
                     <th scope="col" className="relative py-3 pl-6 pr-3">
@@ -121,6 +124,9 @@ export default async function CustomersTable({
                       </td>
                       <td className="whitespace-nowrap bg-white px-4 py-5 text-sm">
                         {farmer.team_leader_id}
+                      </td>
+                      <td className="whitespace-nowrap bg-white px-4 py-5 text-sm">
+                        {farmer.field_supervisor}
                       </td>
                       <td className="whitespace-nowrap bg-white px-4 py-5 text-sm">
                         {farmer.total_goods}
