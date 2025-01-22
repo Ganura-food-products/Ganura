@@ -1,7 +1,7 @@
 import Form from '@/app/ui/farmers/create-form';
 import Breadcrumbs from '@/app/ui/invoices/breadcrumbs';
 import { fetchLeaders } from '@/app/lib/data';
-
+export const fetchCache = 'force-no-store';
 export default async function Page() {
   const leaders = await fetchLeaders();
 

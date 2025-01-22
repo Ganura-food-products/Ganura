@@ -9,6 +9,8 @@ import { fetchCustomersPages } from '@/app/lib/data';
 import { Metadata } from 'next';
 import { CreateCustomer } from '@/app/ui/customers/buttons';
 
+export const fetchCache = 'force-no-store';
+
 export const metadata: Metadata = {
   title: 'customers',
 };

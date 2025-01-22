@@ -1,7 +1,7 @@
 import Form from '@/app/ui/products/create-form';
 import Breadcrumbs from '@/app/ui/invoices/breadcrumbs';
 import { fetchCustomers } from '@/app/lib/data';
- 
+export const fetchCache = 'force-no-store';
 export default async function Page() {
 
  

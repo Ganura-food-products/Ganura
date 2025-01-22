@@ -8,7 +8,7 @@ import { Suspense } from 'react';
 import { fetchProductPages } from '@/app/lib/data';
 import { Metadata } from 'next';
 import { CreateProduct } from '@/app/ui/products/buttons';
-
+export const fetchCache = 'force-no-store';
 export const metadata: Metadata = {
   title: 'Products',
 };

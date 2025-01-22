@@ -2,6 +2,8 @@ import CardWrapper, { Card } from '@/app/ui/dashboard/cards';
 import RevenueChart from '@/app/ui/dashboard/revenue-chart';
 import LatestInvoices from '@/app/ui/dashboard/latest-invoices';
 
+export const fetchCache = 'force-no-store';
+
 import { lusitana, poppins } from '@/app/ui/fonts';
 
 import { Suspense } from 'react';

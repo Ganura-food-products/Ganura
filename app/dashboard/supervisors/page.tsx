@@ -9,7 +9,7 @@ import { fetchSupervisorsPages } from "@/app/lib/data";
 import { Metadata } from "next";
 
 import { CreateSupervisor } from "@/app/ui/supervisors/buttons";
-
+export const fetchCache = 'force-no-store';
 export const metadata: Metadata = {
   title: "Supervisors",
 };

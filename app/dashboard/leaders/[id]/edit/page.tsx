@@ -3,7 +3,7 @@ import Breadcrumbs from '@/app/ui/invoices/breadcrumbs';
 import { fetchLeaderById, fetchSupervisors } from '@/app/lib/data';
 import { notFound } from 'next/navigation';
 import Form from '@/app/ui/leaders/edit-form';
-
+export const fetchCache = 'force-no-store';
 export default async function Page(props: { params: Promise<{ id: string }> }) {
   const params = await props.params;
   const id = params.id;
