@@ -8,7 +8,6 @@ import { fetchInvoicesPages, fetchLeadersPages } from '@/app/lib/data';
 import { Metadata } from 'next';
 import { CreateCustomer } from '@/app/ui/customers/buttons';
 import { CreateLeader } from '@/app/ui/leaders/buttons';
-export const fetchCache = 'force-no-store';
 export const metadata: Metadata = {
   title: 'Team Leaders',
 };

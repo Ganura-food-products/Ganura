@@ -1,7 +1,6 @@
 import Form from '@/app/ui/supervisors/create-form';
 import Breadcrumbs from '@/app/ui/invoices/breadcrumbs';
 
-export const fetchCache = 'force-no-store';
 export default async function Page() {
   
   return (

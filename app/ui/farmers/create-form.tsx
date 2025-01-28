@@ -276,6 +276,7 @@ export default function Form({ leaders }: { leaders: LeaderField[] }) {
               name="team_leader_id"
               placeholder="Choose team leader"
               aria-describedby="team_leader-error"
+              
             >
               {leaders.map((leader) => (
                 <AutocompleteItem key={leader.id} value={leader.name}>

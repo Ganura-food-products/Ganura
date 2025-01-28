@@ -7,7 +7,7 @@ import { Suspense } from 'react';
 import { fetchFarmersPages } from '@/app/lib/data';
 import { Metadata } from 'next';
 import { CreateFarmer } from '@/app/ui/farmers/buttons';
-export const fetchCache = 'force-no-store';
+
 export const metadata: Metadata = {
   title: 'Farmers',
 };
