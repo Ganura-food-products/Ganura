@@ -338,10 +338,10 @@ export async function updateUser (
   const { name, email, password, role } = validatedFields.data;
 
   try {
-    const hashedPassword = await bcrypt.hash(password, 10)
+    
     await sql `
       UPDATE users
-      SET name = ${name},email = ${email}, password = ${hashedPassword}, role= ${role}
+      SET name = ${name},email = ${email}, password = ${password}, role= ${role}
       WHERE id = ${id}  
     `
   }catch (error) {

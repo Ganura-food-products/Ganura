@@ -7,6 +7,7 @@ import { Suspense } from "react";
 import { InvoicesTableSkeleton } from "@/app/ui/skeletons";
 import Table from "@/app/ui/users/table";
 import Pagination from '@/app/ui/farmers/pagination';
+
 export const metadata: Metadata = {
   title: "Users",
 };

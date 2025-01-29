@@ -58,7 +58,7 @@ export default function Form({ user }: { user: UserTable }) {
           </div>
         </div>
 
-        <div className="mb-4">
+        <div className="hidden mb-4">
           <label htmlFor="password" className="mb-2 block text-sm font-medium">
             Enter password
           </label>
@@ -88,7 +88,7 @@ export default function Form({ user }: { user: UserTable }) {
               <div className="flex items-center">
                 <input
                   id="user"
-                  name="status"
+                  name="role"
                   type="radio"
                   value="user"
                   defaultChecked={user.role === "user"}

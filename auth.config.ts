@@ -12,30 +12,44 @@ export const authConfig = {
       const cookie = (await cookies()).get("session")?.value;
       const session = await decrypt(cookie);
 
-      const isAdmin = session?.role === 'admin'
-      const isAccountant = session?.role === 'accountant'
-      const isNormalUser = session?.role === 'user'
+      const isAdmin = session?.role === "admin";
+      const isAccountant = session?.role === "accountant";
+      const isNormalUser = session?.role === "user";
 
-      const isOnCreateEdit = nextUrl.pathname.includes("/create") || nextUrl.pathname.includes("/edit") || nextUrl.pathname.includes("/users");
-      const isOnValidForAccountant = nextUrl.pathname.startsWith("/dashboard/invoices") || nextUrl.pathname.startsWith("/dashboard/customers") || nextUrl.pathname.endsWith("/dashboard") || nextUrl.pathname.startsWith("/dashboard/unauthorized")
+      const isOnCreateEdit =
+        nextUrl.pathname.includes("/create") ||
+        nextUrl.pathname.includes("/edit") ||
+        nextUrl.pathname.includes("/users");
+      const isOnValidForAccountant =
+        nextUrl.pathname.startsWith("/dashboard/invoices") ||
+        nextUrl.pathname.startsWith("/dashboard/customers") ||
+        nextUrl.pathname.endsWith("/dashboard") ||
+        nextUrl.pathname.startsWith("/dashboard/unauthorized");
+
       const isOnDashboard = nextUrl.pathname.startsWith("/dashboard");
 
-      if (isOnCreateEdit){
-        if (isNormalUser) return Response.redirect(new URL("/dashboard/unauthorized", nextUrl));
-        else return true;
+      if (isOnDashboard && !isLoggedIn) {
+        return Response.redirect(new URL("/login", nextUrl));
       }
-      
-      if (isAccountant){
-        if (isOnValidForAccountant) return true
-        else return Response.redirect(new URL("/dashboard/unauthorized", nextUrl));
+      if (isLoggedIn) {
+        if (isOnCreateEdit) {
+          if (isNormalUser) {
+            return Response.redirect(
+              new URL("/dashboard/unauthorized", nextUrl)
+            );
+          }
+          return true;
+        }
+        if (isAccountant) {
+          if (isOnValidForAccountant) return true;
+          return Response.redirect(new URL("/dashboard/unauthorized", nextUrl));
+        }
+        if (!isOnDashboard) {
+          return Response.redirect(new URL("/dashboard", nextUrl));
+        }
+        return true;
       }
 
-      if (isOnDashboard) {
-        if (isLoggedIn) return true;
-        return false;
-      } else if (isLoggedIn) {
-        return Response.redirect(new URL("/dashboard", nextUrl));
-      }
       return true;
     },
   },

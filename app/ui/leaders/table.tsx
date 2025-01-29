@@ -11,7 +11,7 @@ export default async function CustomersTable({
   currentPage: number;
 }) {
   const leaders = await fetchFilteredLeaders(query, currentPage);
-  console.log(leaders);
+
   const cookie = (await cookies()).get("session")?.value;
   const session = await decrypt(cookie);
   const isUser = session?.role === "user";
