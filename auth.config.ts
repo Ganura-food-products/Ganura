@@ -15,6 +15,7 @@ export const authConfig = {
       const isAdmin = session?.role === "admin";
       const isAccountant = session?.role === "accountant";
       const isNormalUser = session?.role === "user";
+      const isOnLogin = nextUrl.pathname === "/login";
 
       const isOnCreateEdit =
         nextUrl.pathname.includes("/create") ||
@@ -29,9 +30,16 @@ export const authConfig = {
       const isOnDashboard = nextUrl.pathname.startsWith("/dashboard");
 
       if (isOnDashboard && !isLoggedIn) {
-        return Response.redirect(new URL("/login", nextUrl));
+        return false;
+      }
+      if (isLoggedIn && isOnLogin) {
+        return Response.redirect(new URL("/dashboard", nextUrl));
       }
       if (isLoggedIn) {
+        if (isAccountant) {
+          if (isOnValidForAccountant) return true;
+          return Response.redirect(new URL("/dashboard/unauthorized", nextUrl));
+        }
         if (isOnCreateEdit) {
           if (isNormalUser) {
             return Response.redirect(
@@ -39,10 +47,6 @@ export const authConfig = {
             );
           }
           return true;
-        }
-        if (isAccountant) {
-          if (isOnValidForAccountant) return true;
-          return Response.redirect(new URL("/dashboard/unauthorized", nextUrl));
         }
         if (!isOnDashboard) {
           return Response.redirect(new URL("/dashboard", nextUrl));
