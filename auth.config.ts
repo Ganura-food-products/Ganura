@@ -16,18 +16,18 @@ export const authConfig = {
       const isAccountant = session?.role === 'accountant'
       const isNormalUser = session?.role === 'user'
 
-      const isOnCreateEdit = nextUrl.pathname.includes("/create") || nextUrl.pathname.includes("/edit");
-      const isOnValidForAccountant = nextUrl.pathname.startsWith("/dashboard/invoices") || nextUrl.pathname.startsWith("/dashboard/customers") || nextUrl.pathname.endsWith("/dashboard")
+      const isOnCreateEdit = nextUrl.pathname.includes("/create") || nextUrl.pathname.includes("/edit") || nextUrl.pathname.includes("/users");
+      const isOnValidForAccountant = nextUrl.pathname.startsWith("/dashboard/invoices") || nextUrl.pathname.startsWith("/dashboard/customers") || nextUrl.pathname.endsWith("/dashboard") || nextUrl.pathname.startsWith("/dashboard/unauthorized")
       const isOnDashboard = nextUrl.pathname.startsWith("/dashboard");
 
       if (isOnCreateEdit){
-        if (isNormalUser) return Response.redirect(new URL("/dashboard", nextUrl));
+        if (isNormalUser) return Response.redirect(new URL("/dashboard/unauthorized", nextUrl));
         else return true;
       }
       
       if (isAccountant){
         if (isOnValidForAccountant) return true
-        else return Response.redirect(new URL("/dashboard", nextUrl));
+        else return Response.redirect(new URL("/dashboard/unauthorized", nextUrl));
       }
 
       if (isOnDashboard) {
