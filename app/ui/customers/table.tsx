@@ -1,10 +1,5 @@
-import Image from "next/image";
-import { lusitana } from "@/app/ui/fonts";
-import Search from "@/app/ui/search";
-import {
-  CustomersTableType,
-  FormattedCustomersTable,
-} from "@/app/lib/definitions";
+import { cookies } from "next/headers";
+import { decrypt } from "@/app/lib/session";
 import { fetchFilteredCustomers } from "@/app/lib/data";
 import { UpdateInvoice, DeleteInvoice } from "@/app/ui/customers/buttons";
 
@@ -12,11 +7,13 @@ export default async function CustomersTable({
   query,
   currentPage,
 }: {
-  // customers: FormattedCustomersTable[];
   query: string;
   currentPage: number;
 }) {
   const customers = await fetchFilteredCustomers(query, currentPage);
+  const cookie = (await cookies()).get("session")?.value;
+  const session = await decrypt(cookie);
+  const isUser = session?.role === "user";
   return (
     <div className="w-full">
       <div className="mt-6 flow-root">
@@ -64,7 +61,7 @@ export default async function CustomersTable({
                       </div>
                       <div className="flex gap-3">
                         <UpdateInvoice id={customer.id} />
-                        <DeleteInvoice id={customer.id} />
+                        {!isUser && <DeleteInvoice id={customer.id} />}
                       </div>
                     </div>
                   </div>
@@ -120,7 +117,7 @@ export default async function CustomersTable({
                       <td className="whitespace-nowrap py-3 pl-6 pr-3">
                         <div className="flex justify-end gap-3">
                           <UpdateInvoice id={customer.id} />
-                          <DeleteInvoice id={customer.id} />
+                          {!isUser && <DeleteInvoice id={customer.id} />}
                         </div>
                       </td>
                     </tr>

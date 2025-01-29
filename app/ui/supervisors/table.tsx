@@ -1,4 +1,5 @@
-import Image from "next/image";
+import { cookies } from "next/headers";
+import { decrypt } from "@/app/lib/session";
 
 import { fetchFilteredSupervisors } from "@/app/lib/data";
 import { UpdateSupervisor, DeleteSupervisor } from "./buttons";
@@ -10,6 +11,9 @@ export default async function CustomersTable({
   query: string;
   currentPage: number;
 }) {
+  const cookie = (await cookies()).get("session")?.value;
+  const session = await decrypt(cookie);
+  const isUser = session?.role === "user";
   const supervisors = await fetchFilteredSupervisors(query, currentPage);
   return (
     <div className="w-full">
@@ -37,7 +41,7 @@ export default async function CustomersTable({
                             <p>{customer.name}</p>
                             <div className="flex justify-end gap-3">
                               <UpdateSupervisor id={customer.id} />
-                              <DeleteSupervisor id={customer.id} />
+                              {!isUser && <DeleteSupervisor id={customer.id} />}
                             </div>
                           </div>
                         </div>
@@ -128,7 +132,7 @@ export default async function CustomersTable({
                       <td className="whitespace-nowrap py-3 pl-6 pr-3">
                         <div className="flex justify-end gap-3">
                           <UpdateSupervisor id={supervisor.id} />
-                          <DeleteSupervisor id={supervisor.id} />
+                          {!isUser && <DeleteSupervisor id={supervisor.id} />}
                         </div>
                       </td>
                     </tr>

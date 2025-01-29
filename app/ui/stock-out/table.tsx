@@ -1,11 +1,9 @@
-import Image from 'next/image';
-import {
-  UpdateInvoice,
-  DeleteSale,
-} from '@/app/ui/stock-out/buttons';
+import { cookies } from "next/headers";
+import { decrypt } from "@/app/lib/session";
+import { UpdateInvoice, DeleteSale } from "@/app/ui/stock-out/buttons";
 
-import { fetchFilteredSales } from '@/app/lib/data';
-import { DownloadGoods } from './DownloadGoods';
+import { fetchFilteredSales } from "@/app/lib/data";
+import { DownloadGoods } from "./DownloadGoods";
 
 export default async function InvoicesTable({
   query,
@@ -15,7 +13,9 @@ export default async function InvoicesTable({
   currentPage: number;
 }) {
   const sales = await fetchFilteredSales(query, currentPage);
-  console.log(sales);
+  const cookie = (await cookies()).get("session")?.value;
+  const session = await decrypt(cookie);
+  const isUser = session?.role === "user";
   return (
     <div className="mt-6 flow-root">
       <div className="inline-block min-w-full align-middle">
@@ -36,16 +36,18 @@ export default async function InvoicesTable({
                 <div className="flex w-full items-center justify-between pt-4">
                   <div>
                     <p className="text-xl font-medium">{sale.product}</p>
-                    <p className="text-sm text-gray-500">Quantity (Kg) : {sale.quantity}</p>
+                    <p className="text-sm text-gray-500">
+                      Quantity (Kg) : {sale.quantity}
+                    </p>
                     <p>
                       {sale.date
                         ? new Date(sale.date).toLocaleDateString()
-                        : ''}
+                        : ""}
                     </p>
                   </div>
                   <div className="flex justify-end gap-2">
                     <UpdateInvoice id={sale.id} />
-                    <DeleteSale id={sale.id} />
+                    {!isUser && <DeleteSale id={sale.id} />}
                     <DownloadGoods stock={sale} />
                   </div>
                 </div>
@@ -90,13 +92,13 @@ export default async function InvoicesTable({
                   </td>
 
                   <td className="whitespace-nowrap px-3 py-3">
-                    {sale.date ? new Date(sale.date).toLocaleDateString() : ''}
+                    {sale.date ? new Date(sale.date).toLocaleDateString() : ""}
                   </td>
 
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
                     <div className="flex justify-end gap-3">
                       <UpdateInvoice id={sale.id} />
-                      <DeleteSale id={sale.id} />
+                      {!isUser && <DeleteSale id={sale.id} />}
                       <DownloadGoods stock={sale} />
                     </div>
                   </td>
