@@ -117,7 +117,7 @@ export default function Form() {
                   htmlFor="user"
                   className="ml-2 flex cursor-pointer items-center gap-1.5 rounded-full bg-gray-100 px-3 py-1.5 text-xs font-medium text-gray-600"
                 >
-                  User <ClockIcon className="h-4 w-4" />
+                  User 
                 </label>
               </div>
               <div className="flex items-center">
@@ -130,9 +130,9 @@ export default function Form() {
                 />
                 <label
                   htmlFor="admin"
-                  className="ml-2 flex cursor-pointer items-center gap-1.5 rounded-full bg-green-500 px-3 py-1.5 text-xs font-medium text-white"
+                  className="ml-2 flex cursor-pointer items-center gap-1.5 rounded-full bg-gray-100 px-3 py-1.5 text-xs font-medium text-gray-600"
                 >
-                  Admin <CheckIcon className="h-4 w-4" />
+                  Admin 
                 </label>
               </div>
               <div className="flex items-center">
@@ -145,9 +145,9 @@ export default function Form() {
                 />
                 <label
                   htmlFor="accountant"
-                  className="ml-2 flex cursor-pointer items-center gap-1.5 rounded-full bg-green-500 px-3 py-1.5 text-xs font-medium text-white"
+                  className="ml-2 flex cursor-pointer items-center gap-1.5 rounded-full bg-gray-100 px-3 py-1.5 text-xs font-medium text-gray-600"
                 >
-                  Accountant <CheckIcon className="h-4 w-4" />
+                  Accountant 
                 </label>
               </div>
             </div>

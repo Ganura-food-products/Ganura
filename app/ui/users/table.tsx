@@ -46,9 +46,9 @@ export default async function UsersTable({
                       </div>
                     </div>
                     <div className="flex w-full items-center justify-between border-b py-5">
-                      <div className="flex w-1/2 flex-col">
+                      {/* <div className="flex w-1/2 flex-col">
                         <p className="font-medium">{user.password}</p>
-                      </div>
+                      </div> */}
                       <div className="flex w-1/2 flex-col"></div>
                     </div>
                     <div className="pt-4 text-sm"></div>
@@ -64,9 +64,9 @@ export default async function UsersTable({
                     <th scope="col" className="px-4 py-5 font-medium sm:pl-6">
                       Email
                     </th>
-                    <th scope="col" className="px-4 py-5 font-medium sm:pl-6">
+                    {/* <th scope="col" className="px-4 py-5 font-medium sm:pl-6">
                       Password
-                    </th>
+                    </th> */}
                     <th scope="col" className="px-4 py-5 font-medium sm:pl-6">
                       Role/Type
                     </th>
@@ -86,9 +86,9 @@ export default async function UsersTable({
                       <td className="whitespace-nowrap bg-white px-4 py-5 text-sm">
                         {user.email}
                       </td>
-                      <td className="whitespace-nowrap bg-white px-4 py-5 text-sm">
+                      {/* <td className="whitespace-nowrap bg-white px-4 py-5 text-sm">
                         {user.password}
-                      </td>
+                      </td> */}
                       <td className="whitespace-nowrap bg-white px-4 py-5 text-sm">
                         {user.role}
                       </td>
