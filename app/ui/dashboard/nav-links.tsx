@@ -30,33 +30,33 @@ export default async function NavLinks() {
       href: "/dashboard/invoices",
       icon: DocumentDuplicateIcon,
     },
-    !isAcc && {
+    {
       name: "Stock In",
       href: "/dashboard/stock-in",
       icon: ArrowDownIcon,
     },
-    !isAcc && {
+    {
       name: "Stock Out",
       href: "/dashboard/stock-out",
       icon: ArrowUpIcon,
     },
     { name: "Customers", href: "/dashboard/customers", icon: UserGroupIcon },
-    !isAcc && {
+    {
       name: "Suppliers",
       href: "/dashboard/farmers",
       icon: TruckIcon,
     },
-    !isAcc && {
+    {
       name: "Team Leaders",
       href: "/dashboard/leaders",
       icon: UserGroupIcon,
     },
-    !isAcc && {
+    {
       name: "Supervisors",
       href: "/dashboard/supervisors",
       icon: ShieldCheckIcon,
     },
-    !isAcc && {
+    {
       name: "Products",
       href: "/dashboard/products",
       icon: DocumentDuplicateIcon,

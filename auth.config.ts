@@ -36,12 +36,12 @@ export const authConfig = {
         return Response.redirect(new URL("/dashboard", nextUrl));
       }
       if (isLoggedIn) {
-        if (isAccountant) {
-          if (isOnValidForAccountant) return true;
-          return Response.redirect(new URL("/dashboard/unauthorized", nextUrl));
-        }
+        // if (isAccountant) {
+        //   if (isOnValidForAccountant) return true;
+        //   return Response.redirect(new URL("/dashboard/unauthorized", nextUrl));
+        // }
         if (isOnCreateEdit) {
-          if (isNormalUser) {
+          if (isNormalUser || isAccountant) {
             return Response.redirect(
               new URL("/dashboard/unauthorized", nextUrl)
             );

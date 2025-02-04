@@ -14,6 +14,7 @@ export default async function InvoicesTable({
   const cookie = (await cookies()).get("session")?.value;
   const session = await decrypt(cookie);
   const isUser = session?.role === "user";
+  const isAcc = session?.role === "accountant"
   return (
     <div className="mt-6 flow-root">
       <div className="inline-block min-w-full align-middle">
@@ -37,7 +38,7 @@ export default async function InvoicesTable({
                       <p>{invoice.name}</p>
                       <div className="flex justify-end gap-3">
                         <UpdateProduct id={invoice.id} />
-                        {!isUser && <DeleteProduct id={invoice.id} />}
+                        {!(isUser ||isAcc) && <DeleteProduct id={invoice.id} />}
                       </div>
                     </div>
                     <p className="text-sm text-gray-500">
@@ -107,7 +108,7 @@ export default async function InvoicesTable({
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
                     <div className="flex justify-end gap-3">
                       <UpdateProduct id={product.id} />
-                      {!isUser && <DeleteProduct id={product.id} />}
+                      {!(isUser || isAcc) && <DeleteProduct id={product.id} />}
                     </div>
                   </td>
                 </tr>

@@ -640,7 +640,7 @@ export async function fetchFilteredGoods(query: string, currentPage: number) {
       ORDER BY supplier ASC
       LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset}
     `;
-    console.log(goods.rows);
+    
     return goods.rows;
   } catch (error) {
     console.error("Database Error:", error);
@@ -673,7 +673,7 @@ export async function fetchGoodsById(id: string) {
     `;
 
     const goods = data.rows;
-    console.log("hiaia", data.rows);
+    
     return goods[0];
   } catch (err) {
     console.error("Database Error:", err);

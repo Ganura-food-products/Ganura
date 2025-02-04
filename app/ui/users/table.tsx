@@ -13,6 +13,7 @@ export default async function UsersTable({
   const cookie = (await cookies()).get("session")?.value;
   const session = await decrypt(cookie);
   const isUser = session?.role === "user";
+  const isAcc = session?.role === "accountant"
   const users = await fetchFilteredUsers(query, currentPage);
   return (
     <div className="w-full">
@@ -33,7 +34,7 @@ export default async function UsersTable({
                             <p>{user.name}</p>
                             <div className="flex justify-end gap-3">
                               <UpdateUser id={user.id} />
-                              {!isUser && <DeleteUser id={user.id} />}
+                              {!(isUser||isAcc) && <DeleteUser id={user.id} />}
                             </div>
                           </div>
                         </div>
@@ -95,7 +96,7 @@ export default async function UsersTable({
                       <td className="whitespace-nowrap py-3 pl-6 pr-3">
                         <div className="flex justify-end gap-3">
                           <UpdateUser id={user.id} />
-                          {!isUser && <DeleteUser id={user.id} />}
+                            {!(isUser || isAcc) && <DeleteUser id={user.id} />}
                         </div>
                       </td>
                     </tr>

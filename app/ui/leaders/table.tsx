@@ -15,6 +15,7 @@ export default async function CustomersTable({
   const cookie = (await cookies()).get("session")?.value;
   const session = await decrypt(cookie);
   const isUser = session?.role === "user";
+  const isAcc = session?.role === "accountant"
   return (
     <div className="w-full">
       <div className="mt-6 flow-root">
@@ -41,7 +42,7 @@ export default async function CustomersTable({
                             <p>{customer.name} /</p>
                             <div className="flex justify-end gap-3">
                               <UpdateFarmer id={customer.id} />
-                              {!isUser && <DeleteFarmer id={customer.id} />}
+                              {!(isUser||isAcc) && <DeleteFarmer id={customer.id} />}
                             </div>
                           </div>
                         </div>
@@ -127,7 +128,7 @@ export default async function CustomersTable({
                       <td className="whitespace-nowrap py-3 pl-6 pr-3">
                         <div className="flex justify-end gap-3">
                           <UpdateFarmer id={leader.id} />
-                          {!isUser && <DeleteFarmer id={leader.id} />}
+                          {!(isUser||isAcc) && <DeleteFarmer id={leader.id} />}
                         </div>
                       </td>
                     </tr>
