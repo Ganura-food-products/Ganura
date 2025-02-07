@@ -11,15 +11,19 @@ import { DownloadGoods } from "./DownloadGoods";
 export default async function InvoicesTable({
   query,
   currentPage,
+  from,
+  to
 }: {
   query: string;
   currentPage: number;
+  from:string;
+  to:string;
 }) {
     const cookie = (await cookies()).get("session")?.value;
     const session = await decrypt(cookie);
     const isUser = session?.role === "user";
     const isAcc = session?.role === "accountant"
-  const stockins = await fetchFilteredGoods(query, currentPage);
+  const stockins = await fetchFilteredGoods(query, currentPage,from,to);
   return (
     <div className="mt-6 flow-root">
       <div className="inline-block min-w-full align-middle">

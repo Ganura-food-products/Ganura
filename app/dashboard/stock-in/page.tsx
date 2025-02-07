@@ -1,5 +1,5 @@
 import Pagination from '@/app/ui/stock-in/pagination';
-import Search from '@/app/ui/search';
+import Search from '@/app/ui/searchWithDate';
 import Table from '@/app/ui/stock-in/table';
 import { lusitana } from '@/app/ui/fonts';
 import { InvoicesTableSkeleton } from '@/app/ui/skeletons';
@@ -14,11 +14,15 @@ export const metadata: Metadata = {
 export default async function Page(props: {
   searchParams?: Promise<{
     query?: string;
+    from?: string;
+    to?:string;
     page?: string;
   }>;
 }) {
   const searchParams = await props.searchParams;
   const query = searchParams?.query || '';
+  const from = searchParams?.from || '';
+  const to = searchParams?.to || '';
   const currentPage = Number(searchParams?.page) || 1;
   const totalPages = await fetchGoodsPages(query);
 
@@ -32,7 +36,7 @@ export default async function Page(props: {
         <CreateStock />
       </div>
       <Suspense key={query + currentPage} fallback={<InvoicesTableSkeleton />}>
-        <Table query={query} currentPage={currentPage} />
+        <Table query={query} currentPage={currentPage} from={from} to={to}/>
       </Suspense>
       <div className="mt-5 flex w-full justify-center">
         <Pagination totalPages={totalPages} />
