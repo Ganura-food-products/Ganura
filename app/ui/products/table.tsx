@@ -1,11 +1,6 @@
-import Image from "next/image";
 import { UpdateProduct, DeleteProduct } from "@/app/ui/products/buttons";
-// import InvoiceStatus from '@/app/ui/invoices/status';
-import {
-  formatDateToLocal,
-  formatCurrency,
-  formatNumber,
-} from "@/app/lib/utils";
+import { cookies } from "next/headers";
+import { decrypt } from "@/app/lib/session";
 import { fetchFilteredProducts } from "@/app/lib/data";
 
 export default async function InvoicesTable({
@@ -16,7 +11,10 @@ export default async function InvoicesTable({
   currentPage: number;
 }) {
   const products = await fetchFilteredProducts(query, currentPage);
-
+  const cookie = (await cookies()).get("session")?.value;
+  const session = await decrypt(cookie);
+  const isUser = session?.role === "user";
+  const isAcc = session?.role === "accountant"
   return (
     <div className="mt-6 flow-root">
       <div className="inline-block min-w-full align-middle">
@@ -40,7 +38,7 @@ export default async function InvoicesTable({
                       <p>{invoice.name}</p>
                       <div className="flex justify-end gap-3">
                         <UpdateProduct id={invoice.id} />
-                        <DeleteProduct id={invoice.id} />
+                        {!(isUser ||isAcc) && <DeleteProduct id={invoice.id} />}
                       </div>
                     </div>
                     <p className="text-sm text-gray-500">
@@ -110,7 +108,7 @@ export default async function InvoicesTable({
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
                     <div className="flex justify-end gap-3">
                       <UpdateProduct id={product.id} />
-                      <DeleteProduct id={product.id} />
+                      {!(isUser || isAcc) && <DeleteProduct id={product.id} />}
                     </div>
                   </td>
                 </tr>

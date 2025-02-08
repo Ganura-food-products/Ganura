@@ -1,4 +1,5 @@
 import { sql } from "@vercel/postgres";
+import bcrypt from "bcrypt";
 import {
   CustomerField,
   CustomersTableType,
@@ -13,10 +14,12 @@ import {
   SupervisorField,
   LeaderField,
   SalesTableType,
+  UserTable,
   GoodsTableType,
   CustomerForm,
 } from "./definitions";
 import { formatCurrency } from "./utils";
+import { user } from "@nextui-org/theme";
 
 export async function fetchRevenue() {
   try {
@@ -149,6 +152,59 @@ export async function fetchFilteredInvoices(
   }
 }
 
+export async function fetchFilteredUsers(query: string, currentPage: number) {
+  const offset = (currentPage - 1) * ITEMS_PER_PAGE;
+  try {
+    const users = await sql<UserTable>`
+      SELECT * FROM users
+      WHERE 
+        users.name ILIKE ${`%${query}%`} OR
+        users.email ILIKE ${`%${query}%`} OR
+        users.role ILIKE ${`%${query}%`}
+      ORDER BY users.name DESC
+      LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset}
+    `;
+    return users.rows;
+  } catch (error) {
+    console.error("Database Error:", error);
+    throw new Error("Failed to fetch filtered users.");
+  }
+}
+
+export async function fetchUsersPages(query: string) {
+  try {
+    const count = await sql`SELECT COUNT(*)
+    FROM users
+    WHERE
+      name ILIKE ${`%${query}%`} OR
+      email ILIKE ${`%${query}%`} OR
+      role ILIKE ${`%${query}%`}
+  `;
+
+    const totalPages = Math.ceil(Number(count.rows[0].count) / ITEMS_PER_PAGE);
+    return totalPages;
+  } catch (error) {
+    console.error("Database Error:", error);
+    throw new Error("Failed to fetch total number of users.");
+  }
+}
+
+export async function fetchUserById(id: string) {
+  try {
+    const data = await sql<UserTable>`
+      SELECT *
+      FROM users
+      WHERE id = ${id}
+    `;
+
+    const user = data.rows;
+    return user[0];
+  } catch (err) {
+    console.error("Database Error:", err);
+    throw new Error("Failed to fetch farmer.");
+  }
+}
+
 export async function fetchInvoicesPages(query: string) {
   try {
     const count = await sql`SELECT COUNT(*)
@@ -211,7 +267,7 @@ export async function fetchInvoiceById(id: string) {
   }
 }
 
-export async function fetchProductById(id:string){
+export async function fetchProductById(id: string) {
   try {
     const data = await sql<ProductsTableType>`
       SELECT *
@@ -219,7 +275,7 @@ export async function fetchProductById(id:string){
       WHERE products.id = ${id};
     `;
 
-    const product = data.rows
+    const product = data.rows;
 
     return product[0];
   } catch (error) {
@@ -569,20 +625,43 @@ export async function fetchLeaderById(id: string) {
   }
 }
 
-export async function fetchFilteredGoods(query: string, currentPage: number) {
+export async function fetchFilteredGoods(
+  query: string,
+  currentPage: number,
+  from: string,
+  to: string
+) {
   const offset = (currentPage - 1) * ITEMS_PER_PAGE;
-
   try {
-    const goods = await sql<GoodsTableType>`
-      SELECT *
-      FROM goods
-      WHERE
-        supplier ILIKE ${`%${query}%`}
-      ORDER BY supplier ASC
-      LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset}
-    `;
-    console.log(goods.rows);
-    return goods.rows;
+    if (from !== "" && to !== "" && query !== "") {
+      const goods = await sql<GoodsTableType>`
+        SELECT * FROM goods 
+        WHERE 
+          (supplier ILIKE ${`%${query}%`} OR product ILIKE ${`%${query}%`}) AND
+          date BETWEEN ${`%${from}%`} AND ${`%${to}%`}
+        ORDER BY supplier ASC 
+        LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset}
+       `;
+      return goods.rows;
+    } else if (from !== "" && to !== "" && query === "") {
+      const goods = await sql<GoodsTableType>`
+        SELECT * FROM goods 
+        WHERE
+          date BETWEEN ${`%${from}%`} AND ${`%${to}%`}
+        ORDER BY supplier ASC 
+        LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset}
+       `;
+      return goods.rows;
+    } else {
+      const goods = await sql<GoodsTableType>` 
+      SELECT * FROM goods 
+      WHERE 
+        supplier ILIKE ${`%${query}%`} OR 
+        product ILIKE ${`%${query}%`}
+      ORDER BY supplier ASC 
+      LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset} `;
+      return goods.rows;
+    }
   } catch (error) {
     console.error("Database Error:", error);
     throw new Error("Failed to fetch goods.");
@@ -614,7 +693,7 @@ export async function fetchGoodsById(id: string) {
     `;
 
     const goods = data.rows;
-    console.log("hiaia", data.rows);
+
     return goods[0];
   } catch (err) {
     console.error("Database Error:", err);

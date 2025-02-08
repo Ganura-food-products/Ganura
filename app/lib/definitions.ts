@@ -2,12 +2,21 @@
 // It describes the shape of the data, and what data type each property should accept.
 // For simplicity of teaching, we're manually defining these types.
 // However, these types are generated automatically if you're using an ORM such as Prisma.
+import { JWTPayload } from "jose";
 export type User = {
   id: string;
   name: string;
   email: string;
   password: string;
+  role: string;
 };
+
+export interface SessionPayload extends JWTPayload{
+  userId: string;
+  // email: string;
+  role: string;
+  expiresAt: Date;
+}
 
 export type Customer = {
   id: string;
@@ -63,6 +72,14 @@ export type CustomersTableType = {
 
   total_paid: number;
 };
+
+export type UserTable = {
+  id: string;
+  name: string;
+  email: string;
+  password: string;
+  role: "admin"|"user"|"accountant";
+}
 
 export type FormattedCustomersTable = {
   id: string;

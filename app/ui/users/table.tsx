@@ -1,10 +1,9 @@
+import { fetchFilteredUsers } from "@/app/lib/data";
+import { DeleteUser, UpdateUser } from "./buttons";
 import { cookies } from "next/headers";
 import { decrypt } from "@/app/lib/session";
-import { fetchFilteredFarmers } from "@/app/lib/data";
 
-import { DeleteFarmer, UpdateFarmer } from "./buttons";
-
-export default async function CustomersTable({
+export default async function UsersTable({
   query,
   currentPage,
 }: {
@@ -15,7 +14,7 @@ export default async function CustomersTable({
   const session = await decrypt(cookie);
   const isUser = session?.role === "user";
   const isAcc = session?.role === "accountant"
-  const farmers = await fetchFilteredFarmers(query, currentPage);
+  const users = await fetchFilteredUsers(query, currentPage);
   return (
     <div className="w-full">
       <div className="mt-6 flow-root">
@@ -23,38 +22,34 @@ export default async function CustomersTable({
           <div className="inline-block min-w-full align-middle">
             <div className="overflow-hidden rounded-md bg-gray-50 p-2 md:pt-0">
               <div className="md:hidden">
-                {farmers?.map((farmer) => (
+                {users?.map((user) => (
                   <div
-                    key={farmer.id}
+                    key={user.id}
                     className="mb-2 w-full rounded-md bg-white p-4"
                   >
                     <div className="flex items-center justify-between border-b pb-4">
                       <div>
                         <div className="mb-2 flex items-center">
                           <div className="flex items-center gap-3 justify-between">
-                            <p>{farmer.name}</p>
+                            <p>{user.name}</p>
                             <div className="flex justify-end gap-3">
-                              <UpdateFarmer id={farmer.id} />
-                              {!(isUser||isAcc) && <DeleteFarmer id={farmer.id} />}
+                              <UpdateUser id={user.id} />
+                              {!(isUser||isAcc) && <DeleteUser id={user.id} />}
                             </div>
                           </div>
                         </div>
                         <p className="text-sm text-gray-500">
-                          <a href={`tel:${farmer.phone_number}`}>
-                            {farmer.phone_number}
-                          </a>
+                          <a>{user.email}</a>
                         </p>
                         <p className="text-sm text-gray-500">
-                          <a href={`tel:${farmer.phone_number}`}>
-                            {farmer.total_goods}
-                          </a>
+                          <a>{user.role}</a>
                         </p>
                       </div>
                     </div>
                     <div className="flex w-full items-center justify-between border-b py-5">
-                      <div className="flex w-1/2 flex-col">
-                        <p className="font-medium">{farmer.team_leader_id}</p>
-                      </div>
+                      {/* <div className="flex w-1/2 flex-col">
+                        <p className="font-medium">{user.password}</p>
+                      </div> */}
                       <div className="flex w-1/2 flex-col"></div>
                     </div>
                     <div className="pt-4 text-sm"></div>
@@ -67,67 +62,41 @@ export default async function CustomersTable({
                     <th scope="col" className="px-4 py-5 font-medium sm:pl-6">
                       Name
                     </th>
-                    <th scope="col" className="px-3 py-5 font-medium">
-                      Phone Number
+                    <th scope="col" className="px-4 py-5 font-medium sm:pl-6">
+                      Email
                     </th>
-
-                    <th scope="col" className="px-3 py-5 font-medium">
-                      District
-                    </th>
-                    <th scope="col" className="px-4 py-5 font-medium">
-                      Sector
-                    </th>
-                    <th scope="col" className="px-4 py-5 font-medium">
-                      Area
-                    </th>
-                    <th scope="col" className="px-4 py-5 font-medium">
-                      Team Leader
-                    </th>
-                    <th scope="col" className="px-4 py-5 font-medium">
-                      Field Supervisor
-                    </th>
-                    <th scope="col" className="px-4 py-5 font-medium">
-                      Provided Stock(KG)
+                    {/* <th scope="col" className="px-4 py-5 font-medium sm:pl-6">
+                      Password
+                    </th> */}
+                    <th scope="col" className="px-4 py-5 font-medium sm:pl-6">
+                      Role/Type
                     </th>
                     <th scope="col" className="relative py-3 pl-6 pr-3">
                       <span className="sr-only">Edit</span>
                     </th>
                   </tr>
                 </thead>
-
                 <tbody className="divide-y divide-gray-200 text-gray-900">
-                  {farmers.map((farmer) => (
-                    <tr key={farmer.id} className="group">
+                  {users.map((user) => (
+                    <tr key={user.id} className="group">
                       <td className="whitespace-nowrap bg-white py-5 pl-4 pr-3 text-sm text-black group-first-of-type:rounded-md group-last-of-type:rounded-md sm:pl-6">
                         <div className="flex items-center gap-3">
-                          <p>{farmer.name}</p>
+                          <p>{user.name}</p>
                         </div>
                       </td>
                       <td className="whitespace-nowrap bg-white px-4 py-5 text-sm">
-                        {farmer.phone_number}
+                        {user.email}
                       </td>
+                      {/* <td className="whitespace-nowrap bg-white px-4 py-5 text-sm">
+                        {user.password}
+                      </td> */}
                       <td className="whitespace-nowrap bg-white px-4 py-5 text-sm">
-                        {farmer.district}
-                      </td>
-                      <td className="whitespace-nowrap bg-white px-4 py-5 text-sm">
-                        {farmer.sector}
-                      </td>
-                      <td className="whitespace-nowrap bg-white px-4 py-5 text-sm">
-                        {farmer.area}
-                      </td>
-                      <td className="whitespace-nowrap bg-white px-4 py-5 text-sm">
-                        {farmer.team_leader_id}
-                      </td>
-                      <td className="whitespace-nowrap bg-white px-4 py-5 text-sm">
-                        {farmer.field_supervisor}
-                      </td>
-                      <td className="whitespace-nowrap bg-white px-4 py-5 text-sm">
-                        {farmer.total_goods}
+                        {user.role}
                       </td>
                       <td className="whitespace-nowrap py-3 pl-6 pr-3">
                         <div className="flex justify-end gap-3">
-                          <UpdateFarmer id={farmer.id} />
-                          {!(isUser||isAcc) && <DeleteFarmer id={farmer.id} />}
+                          <UpdateUser id={user.id} />
+                            {!(isUser || isAcc) && <DeleteUser id={user.id} />}
                         </div>
                       </td>
                     </tr>

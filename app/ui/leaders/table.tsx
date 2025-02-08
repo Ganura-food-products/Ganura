@@ -1,18 +1,21 @@
 import { fetchFilteredLeaders } from "@/app/lib/data";
-// import { UpdateInvoice, DeleteInvoice } from '@/app/ui/customers/buttons';
 import { UpdateFarmer, DeleteFarmer } from "./buttons";
+import { cookies } from "next/headers";
+import { decrypt } from "@/app/lib/session";
 
 export default async function CustomersTable({
   query,
   currentPage,
 }: {
-  // customers: FormattedCustomersTable[];
   query: string;
   currentPage: number;
 }) {
-  // const customers = await fetchFilteredCustomers(query, currentPage);
   const leaders = await fetchFilteredLeaders(query, currentPage);
-  console.log(leaders);
+
+  const cookie = (await cookies()).get("session")?.value;
+  const session = await decrypt(cookie);
+  const isUser = session?.role === "user";
+  const isAcc = session?.role === "accountant"
   return (
     <div className="w-full">
       <div className="mt-6 flow-root">
@@ -36,12 +39,10 @@ export default async function CustomersTable({
                               width={28}
                               height={28}
                             /> */}
-                            <p>
-                              {customer.name} /
-                            </p>
+                            <p>{customer.name} /</p>
                             <div className="flex justify-end gap-3">
                               <UpdateFarmer id={customer.id} />
-                              <DeleteFarmer id={customer.id} />
+                              {!(isUser||isAcc) && <DeleteFarmer id={customer.id} />}
                             </div>
                           </div>
                         </div>
@@ -127,7 +128,7 @@ export default async function CustomersTable({
                       <td className="whitespace-nowrap py-3 pl-6 pr-3">
                         <div className="flex justify-end gap-3">
                           <UpdateFarmer id={leader.id} />
-                          <DeleteFarmer id={leader.id} />
+                          {!(isUser||isAcc) && <DeleteFarmer id={leader.id} />}
                         </div>
                       </td>
                     </tr>

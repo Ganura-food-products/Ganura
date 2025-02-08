@@ -1,13 +1,12 @@
 "use server";
 
 import { z, date } from "zod";
+import bcrypt from "bcrypt";
 import { sql } from "@vercel/postgres";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { signIn } from "@/auth";
 import { AuthError } from "next-auth";
-
-
 
 const FormSchema = z.object({
   id: z.string(),
@@ -35,7 +34,9 @@ const FarmerSchema = z.object({
   sector: z.string().min(1, "sector cannot be empty"),
   cell: z.string().min(1, "cell cannot be empty"),
   village: z.string().min(1, "village cannot be empty"),
-  team_leader_id: z.string().min(1, "team leader must be selected cannot be empty"),
+  team_leader_id: z
+    .string()
+    .min(1, "team leader must be selected cannot be empty"),
   date: z.string(),
   area: z.coerce
     .number()
@@ -46,7 +47,9 @@ const LeaderSchema = z.object({
   id: z.string(),
   name: z.string().min(1, "Name cannot be empty"),
   id_number: z.string().min(10, "ID must be at least 10 characters long"),
-  phone_number: z.string().min(8, "Phone number must be at least 8 characters long"),
+  phone_number: z
+    .string()
+    .min(8, "Phone number must be at least 8 characters long"),
   city: z.string().min(1, "city cannot be empty"),
   district: z.string().min(1, "district cannot be empty"),
   sector: z.string().min(1, "sector cannot be empty"),
@@ -56,11 +59,23 @@ const LeaderSchema = z.object({
   date: z.string(),
 });
 
+const UserSchema = z.object({
+  id: z.string(),
+  name: z.string().min(1, "Name cannot be empty"),
+  email: z.string().email("Invalid email address"),
+  password: z.string().min(9, "password must be atleast 9 characters"),
+  role: z.enum(["admin", "user", "accountant"], {
+    invalid_type_error: "Please select an user role.",
+  }),
+});
+
 const SupervisorSchema = z.object({
   id: z.string(),
   name: z.string().min(1, "Name cannot be empty"),
   id_number: z.string().min(8, "id must be at least 8 characters long"),
-  phone_number: z.string().min(8, "Phone number must be at least 8 characters long"),
+  phone_number: z
+    .string()
+    .min(8, "Phone number must be at least 8 characters long"),
   city: z.string().min(1, "city cannot be empty"),
   district: z.string().min(1, "district cannot be empty"),
   sector: z.string().min(1, "sector cannot be empty"),
@@ -121,6 +136,7 @@ const UpdateLeader = LeaderSchema.omit({ id: true, date: true });
 const CreateGoods = GoodsSchema.omit({ id: true });
 const UpdateGoods = GoodsSchema.omit({ id: true });
 const CreateSales = SalesSchema.omit({ id: true });
+const CreateUser = UserSchema.omit({ id: true });
 const UpdateSales = SalesSchema.omit({ id: true });
 const CreateCustomers = CustomersSchema.omit({ id: true, image_url: true });
 
@@ -161,6 +177,16 @@ export type CustomerState = {
   errors?: {
     name?: string[];
     email?: string[];
+  };
+  message?: string | null;
+};
+
+export type UserState = {
+  errors?: {
+    name?: string[];
+    email?: string[];
+    password?: string[];
+    role?: string[];
   };
   message?: string | null;
 };
@@ -259,6 +285,83 @@ export async function createCustomer(
 
   revalidatePath("/dashboard/customers");
   redirect("/dashboard/customers");
+}
+
+export async function createUser(prevState: UserState, formData: FormData) {
+  const validatedFields = CreateUser.safeParse({
+    name: formData.get("name"),
+    email: formData.get("email"),
+    password: formData.get("password"),
+    role: formData.get("role"),
+  });
+  if (!validatedFields.success) {
+    return {
+      errors: validatedFields.error.flatten().fieldErrors,
+      message: "Missing Fields. Failed to Create customer.",
+    };
+  }
+  const { name, email, password, role } = validatedFields.data;
+  try {
+    const hashedPassword = await bcrypt.hash(password, 10)
+    await sql`
+      INSERT INTO users (name,email,password,role)
+      VALUES (${name},${email},${hashedPassword},${role})
+    `
+  } catch (error) {
+    console.log("failed create user");
+    console.log(error); 
+    return {
+      message: "Database Error: Failed to Create user.",
+    };
+  }
+  revalidatePath("/dashboard/users");
+  redirect("/dashboard/users");
+}
+
+export async function updateUser (
+  id: string,
+  prevState: UserState,
+  formData: FormData,
+) {
+  const validatedFields = CreateUser.safeParse({
+    name: formData.get("name"),
+    email: formData.get("email"),
+    password: formData.get("password"),
+    role: formData.get("role"),
+  });
+  if (!validatedFields.success) {
+    return {
+      errors: validatedFields.error.flatten().fieldErrors,
+      message: "Missing Fields. Failed to Update Invoice.",
+    };
+  }
+  const { name, email, password, role } = validatedFields.data;
+
+  try {
+    
+    await sql `
+      UPDATE users
+      SET name = ${name},email = ${email}, password = ${password}, role= ${role}
+      WHERE id = ${id}  
+    `
+  }catch (error) {
+    console.log("update user failed");
+    console.log(error);
+    return { message: "Database Error: Failed to Update user." };
+  }
+  revalidatePath("/dashboard/users");
+  redirect("/dashboard/users");
+}
+
+export async function deleteUser(id: string) {
+  try {
+    await sql`DELETE FROM users WHERE id = ${id}`;
+    revalidatePath("/dashboard/users");
+    return { message: "Deleted user." };
+  } catch (error) {
+    console.log("failed to delete user bcz", error);
+    return { message: "Database Error: Failed to Delete user." };
+  }
 }
 
 export async function createInvoice(prevState: newState, formData: FormData) {
