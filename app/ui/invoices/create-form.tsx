@@ -1,59 +1,78 @@
-'use client';
+"use client";
 
-import { CustomerField } from '@/app/lib/definitions';
-import Link from 'next/link';
+import { FarmerField } from "@/app/lib/definitions";
+import Link from "next/link";
 import {
   CheckIcon,
   ClockIcon,
   CurrencyDollarIcon,
   UserCircleIcon,
-} from '@heroicons/react/24/outline';
-import { Button } from '@/app/ui/button';
-import { createInvoice, State } from '@/app/lib/actions';
-import { useActionState } from 'react';
+} from "@heroicons/react/24/outline";
+import { Button } from "@/app/ui/button";
+import { createInvoice, newState } from "@/app/lib/actions";
+import { useActionState, useState, useMemo } from "react";
+import { Autocomplete, AutocompleteItem } from "@nextui-org/autocomplete";
 
-export default function Form({ customers }: { customers: CustomerField[] }) {
-  const initialState: State = { message: null, errors: {} };
+export default function Form({ farmers }: { farmers: FarmerField[] }) {
+  const initialState: newState = { message: null, errors: {} };
   const [state, formAction] = useActionState(createInvoice, initialState);
+  const [selectedFarmerId, setSelectedFarmerId] = useState("");
+
+  
+
   return (
     <form action={formAction}>
       <div className="rounded-md bg-gray-50 p-4 md:p-6">
-        {/* Customer Name */}
-        {/* <div className="mb-4">
-          <label htmlFor="customer" className="mb-2 block text-sm font-medium">
-            Choose customer
+        <div className="mb-4">
+          <label htmlFor="farmer" className="mb-2 block text-sm font-medium">
+            Choose farmer
           </label>
           <div className="relative">
-            <select
-              id="customer"
-              name="customerId"
+            <Autocomplete
+              placeholder="Choose farmer"
+              onSelectionChange = {(key) => {setSelectedFarmerId(key as string)}}
+            >
+              {farmers.map((leader) => (
+                <AutocompleteItem key={leader.id} value={leader.id}>
+                  {leader.name}
+                </AutocompleteItem>
+              ))}
+            </Autocomplete>
+            <input
+              id="farmer"
+              aria-describedby="farmer-error"
+              type="hidden"
+              name="farmerId"
+              value={selectedFarmerId}
+            />
+            {/* <select
+              id="farmer"
+              name="farmerId"
               className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
               defaultValue=""
-              aria-describedby="customer-error"
+              aria-describedby="farmer-error"
             >
               <option value="" disabled>
-                Select a customer
+                Select a farmer
               </option>
-              {customers.map((customer) => (
-                <option key={customer.id} value={customer.id}>
-                  {customer.name}
+              {farmers.map((farmer) => (
+                <option key={farmer.id} value={farmer.id}>
+                  {farmer.name}
                 </option>
               ))}
-            </select>
+            </select> */}
             <UserCircleIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
-            <div id="customer-error" aria-live="polite" aria-atomic="true">
-              {state.errors?.customerId &&
-                state.errors.customerId.map((error: string) => (
+            <div id="farmer-error" aria-live="polite" aria-atomic="true">
+              {state.errors?.farmerId &&
+                state.errors.farmerId.map((error: string) => (
                   <p className="mt-2 text-sm text-red-500" key={error}>
                     {error}
                   </p>
                 ))}
             </div>
           </div>
-        </div> */}
-        
+        </div>
 
-        {/* Invoice Amount */}
         <div className="mb-4">
           <label htmlFor="amount" className="mb-2 block text-sm font-medium">
             Choose an amount
@@ -65,7 +84,7 @@ export default function Form({ customers }: { customers: CustomerField[] }) {
                 name="amount"
                 type="number"
                 step="0.01"
-                placeholder="Enter USD amount"
+                placeholder="Enter RFW amount"
                 className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
                 aria-describedby="amount-error"
               />
@@ -82,7 +101,6 @@ export default function Form({ customers }: { customers: CustomerField[] }) {
           </div>
         </div>
 
-        {/* Invoice Status */}
         <fieldset>
           <legend className="mb-2 block text-sm font-medium">
             Set the invoice status

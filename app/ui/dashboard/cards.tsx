@@ -3,35 +3,47 @@ import {
   ClockIcon,
   UserGroupIcon,
   InboxIcon,
-} from '@heroicons/react/24/outline';
-import { lusitana, montserrat } from '@/app/ui/fonts';
+  TruckIcon,
+} from "@heroicons/react/24/outline";
+import { montserrat } from "@/app/ui/fonts";
 
-import { fetchCardData } from '@/app/lib/data';
+import { fetchCardData } from "@/app/lib/data";
 
 const iconMap = {
   collected: BanknotesIcon,
   customers: UserGroupIcon,
   pending: ClockIcon,
   invoices: InboxIcon,
+  Stock: TruckIcon,
 };
 
 export default async function CardWrapper() {
   const {
-    numberOfInvoices,
-    numberOfCustomers,
     totalPaidInvoices,
-    totalPendingInvoices,
+    totalArea,
+    numberOfFarmers,
+    totalQuantityBasilicSeedsStock,
+    totalQuantityBasilicSeedsSales,
+    totalQuantityChiaSeedsStock,
+    totalQuantityChiaSeedsSales,
   } = await fetchCardData();
+
   return (
     <>
-      <Card title="Collected" value={totalPaidInvoices} type="collected" />
-      <Card title="Pending" value={totalPendingInvoices} type="pending" />
-      <Card title="Total Invoices" value={numberOfInvoices} type="invoices" />
+      <Card title="paid Amount" value={totalPaidInvoices} type="collected" />
+
       <Card
-        title="Total Customers"
-        value={numberOfCustomers}
-        type="customers"
+        title="Available Basilic Seeds(KG)"
+        value={totalQuantityBasilicSeedsStock - totalQuantityBasilicSeedsSales}
+        type="Stock"
       />
+      <Card
+        title="Available Chia Seeds(KG)"
+        value={totalQuantityChiaSeedsStock - totalQuantityChiaSeedsSales}
+        type="Stock"
+      />
+      <Card title="Total Area(Ha)" value={totalArea} type="invoices" />
+      <Card title="Total Suppliers" value={numberOfFarmers} type="customers" />
     </>
   );
 }
@@ -43,7 +55,7 @@ export function Card({
 }: {
   title: string;
   value: number | string;
-  type: 'invoices' | 'customers' | 'pending' | 'collected';
+  type: "invoices" | "customers" | "pending" | "collected" | "Stock";
 }) {
   const Icon = iconMap[type];
 

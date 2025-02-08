@@ -1,13 +1,13 @@
 import Pagination from '@/app/ui/invoices/pagination';
 import Search from '@/app/ui/search';
-import Table from '@/app/ui/farmers/table';
+import Table from '@/app/ui/leaders/table';
 import { lusitana, montserrat } from '@/app/ui/fonts';
 import { InvoicesTableSkeleton } from '@/app/ui/skeletons';
 import { Suspense } from 'react';
-import { fetchInvoicesPages } from '@/app/lib/data';
+import { fetchInvoicesPages, fetchLeadersPages } from '@/app/lib/data';
 import { Metadata } from 'next';
 import { CreateCustomer } from '@/app/ui/customers/buttons';
-
+import { CreateLeader } from '@/app/ui/leaders/buttons';
 export const metadata: Metadata = {
   title: 'Team Leaders',
 };
@@ -21,7 +21,7 @@ export default async function Page(props: {
   const searchParams = await props.searchParams;
   const query = searchParams?.query || '';
   const currentPage = Number(searchParams?.page) || 1;
-  const totalPages = await fetchInvoicesPages(query);
+  const totalPages = await fetchLeadersPages(query);
 
   return (
     <div className="w-full">
@@ -29,8 +29,8 @@ export default async function Page(props: {
         <h1 className={`${montserrat.className} text-2xl`}>Team Leaders</h1>
       </div>
       <div className="mt-4 flex items-center justify-between gap-2 md:mt-8">
-        <Search placeholder="Search Customer..." />
-        <CreateCustomer />
+        <Search placeholder="Search Team Leader..." />
+        <CreateLeader />
       </div>
       <Suspense key={query + currentPage} fallback={<InvoicesTableSkeleton />}>
         <Table query={query} currentPage={currentPage} />

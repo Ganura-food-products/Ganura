@@ -1,22 +1,20 @@
-import Image from 'next/image';
-import { lusitana } from '@/app/ui/fonts';
-import Search from '@/app/ui/search';
-import {
-  CustomersTableType,
-  FormattedCustomersTable,
-} from '@/app/lib/definitions';
-import { fetchFilteredCustomers } from '@/app/lib/data';
-import { UpdateInvoice, DeleteInvoice } from '@/app/ui/customers/buttons';
+import { cookies } from "next/headers";
+import { decrypt } from "@/app/lib/session";
+import { fetchFilteredCustomers } from "@/app/lib/data";
+import { UpdateInvoice, DeleteInvoice } from "@/app/ui/customers/buttons";
 
 export default async function CustomersTable({
   query,
   currentPage,
 }: {
-  // customers: FormattedCustomersTable[];
   query: string;
   currentPage: number;
 }) {
   const customers = await fetchFilteredCustomers(query, currentPage);
+  const cookie = (await cookies()).get("session")?.value;
+  const session = await decrypt(cookie);
+  const isUser = session?.role === "user";
+  const isAcc = session?.role === "accountant";
   return (
     <div className="w-full">
       <div className="mt-6 flow-root">
@@ -33,13 +31,13 @@ export default async function CustomersTable({
                       <div>
                         <div className="mb-2 flex items-center">
                           <div className="flex items-center gap-3">
-                            <Image
+                            {/* <Image
                               src={customer.image_url}
                               className="rounded-full"
                               alt={`${customer.name}'s profile picture`}
                               width={28}
                               height={28}
-                            />
+                            /> */}
                             <p>{customer.name}</p>
                           </div>
                         </div>
@@ -51,15 +49,23 @@ export default async function CustomersTable({
                     <div className="flex w-full items-center justify-between border-b py-5">
                       <div className="flex w-1/2 flex-col">
                         <p className="text-xs">Pending</p>
-                        <p className="font-medium">{customer.total_pending}</p>
+                        {/* <p className="font-medium">{customer.total_pending}</p> */}
                       </div>
                       <div className="flex w-1/2 flex-col">
                         <p className="text-xs">Paid</p>
                         <p className="font-medium">{customer.total_paid}</p>
                       </div>
                     </div>
-                    <div className="pt-4 text-sm">
-                      <p>{customer.total_invoices} invoices</p>
+                    <div className="flex justify-between items-center py-5">
+                      <div className=" text-sm">
+                        <p>{customer.total_invoices} invoices</p>
+                      </div>
+                      <div className="flex gap-3">
+                        <UpdateInvoice id={customer.id} />
+                        {!(isUser || isAcc) && (
+                          <DeleteInvoice id={customer.id} />
+                        )}
+                      </div>
                     </div>
                   </div>
                 ))}
@@ -93,13 +99,9 @@ export default async function CustomersTable({
                     <tr key={customer.id} className="group">
                       <td className="whitespace-nowrap bg-white py-5 pl-4 pr-3 text-sm text-black group-first-of-type:rounded-md group-last-of-type:rounded-md sm:pl-6">
                         <div className="flex items-center gap-3">
-                          <Image
-                            src={customer.image_url}
-                            className="rounded-full"
-                            alt={`${customer.name}'s profile picture`}
-                            width={28}
-                            height={28}
-                          />
+                          <div className="flex h-7 w-7 items-center justify-center rounded-full bg-blue-200 text-blue-700 font-semibold uppercase">
+                            {customer.name.charAt(0)}
+                          </div>
                           <p>{customer.name}</p>
                         </div>
                       </td>
@@ -110,7 +112,7 @@ export default async function CustomersTable({
                         {customer.total_invoices}
                       </td>
                       <td className="whitespace-nowrap bg-white px-4 py-5 text-sm">
-                        {customer.total_pending}
+                        {/* {customer.total_pending} */}
                       </td>
                       <td className="whitespace-nowrap bg-white px-4 py-5 text-sm group-first-of-type:rounded-md group-last-of-type:rounded-md">
                         {customer.total_paid}
@@ -118,7 +120,9 @@ export default async function CustomersTable({
                       <td className="whitespace-nowrap py-3 pl-6 pr-3">
                         <div className="flex justify-end gap-3">
                           <UpdateInvoice id={customer.id} />
-                          <DeleteInvoice id={customer.id} />
+                          {!(isUser || isAcc) && (
+                            <DeleteInvoice id={customer.id} />
+                          )}
                         </div>
                       </td>
                     </tr>

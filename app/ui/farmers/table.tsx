@@ -1,25 +1,21 @@
-import Image from 'next/image';
-import { lusitana } from '@/app/ui/fonts';
-import Search from '@/app/ui/search';
-import {
-  CustomersTableType,
-  FormattedCustomersTable,
-} from '@/app/lib/definitions';
-import { fetchFilteredCustomers, fetchFarmers } from '@/app/lib/data';
-import { UpdateInvoice, DeleteInvoice } from '@/app/ui/customers/buttons';
-import { UpdateFarmer } from './buttons';
+import { cookies } from "next/headers";
+import { decrypt } from "@/app/lib/session";
+import { fetchFilteredFarmers } from "@/app/lib/data";
+
+import { DeleteFarmer, UpdateFarmer } from "./buttons";
 
 export default async function CustomersTable({
   query,
   currentPage,
 }: {
-  // customers: FormattedCustomersTable[];
   query: string;
   currentPage: number;
 }) {
-  const customers = await fetchFilteredCustomers(query, currentPage);
-  const farmers = await fetchFarmers();
-  console.log(farmers);
+  const cookie = (await cookies()).get("session")?.value;
+  const session = await decrypt(cookie);
+  const isUser = session?.role === "user";
+  const isAcc = session?.role === "accountant"
+  const farmers = await fetchFilteredFarmers(query, currentPage);
   return (
     <div className="w-full">
       <div className="mt-6 flow-root">
@@ -27,43 +23,41 @@ export default async function CustomersTable({
           <div className="inline-block min-w-full align-middle">
             <div className="overflow-hidden rounded-md bg-gray-50 p-2 md:pt-0">
               <div className="md:hidden">
-                {customers?.map((customer) => (
+                {farmers?.map((farmer) => (
                   <div
-                    key={customer.id}
+                    key={farmer.id}
                     className="mb-2 w-full rounded-md bg-white p-4"
                   >
                     <div className="flex items-center justify-between border-b pb-4">
                       <div>
                         <div className="mb-2 flex items-center">
-                          <div className="flex items-center gap-3">
-                            <Image
-                              src={customer.image_url}
-                              className="rounded-full"
-                              alt={`${customer.name}'s profile picture`}
-                              width={28}
-                              height={28}
-                            />
-                            <p>{customer.name}</p>
+                          <div className="flex items-center gap-3 justify-between">
+                            <p>{farmer.name}</p>
+                            <div className="flex justify-end gap-3">
+                              <UpdateFarmer id={farmer.id} />
+                              {!(isUser||isAcc) && <DeleteFarmer id={farmer.id} />}
+                            </div>
                           </div>
                         </div>
                         <p className="text-sm text-gray-500">
-                          {customer.email}
+                          <a href={`tel:${farmer.phone_number}`}>
+                            {farmer.phone_number}
+                          </a>
+                        </p>
+                        <p className="text-sm text-gray-500">
+                          <a href={`tel:${farmer.phone_number}`}>
+                            {farmer.total_goods}
+                          </a>
                         </p>
                       </div>
                     </div>
                     <div className="flex w-full items-center justify-between border-b py-5">
                       <div className="flex w-1/2 flex-col">
-                        <p className="text-xs">Pending</p>
-                        <p className="font-medium">{customer.total_pending}</p>
+                        <p className="font-medium">{farmer.team_leader_id}</p>
                       </div>
-                      <div className="flex w-1/2 flex-col">
-                        <p className="text-xs">Paid</p>
-                        <p className="font-medium">{customer.total_paid}</p>
-                      </div>
+                      <div className="flex w-1/2 flex-col"></div>
                     </div>
-                    <div className="pt-4 text-sm">
-                      <p>{customer.total_invoices} invoices</p>
-                    </div>
+                    <div className="pt-4 text-sm"></div>
                   </div>
                 ))}
               </div>
@@ -84,7 +78,16 @@ export default async function CustomersTable({
                       Sector
                     </th>
                     <th scope="col" className="px-4 py-5 font-medium">
-                      Village
+                      Area
+                    </th>
+                    <th scope="col" className="px-4 py-5 font-medium">
+                      Team Leader
+                    </th>
+                    <th scope="col" className="px-4 py-5 font-medium">
+                      Field Supervisor
+                    </th>
+                    <th scope="col" className="px-4 py-5 font-medium">
+                      Provided Stock(KG)
                     </th>
                     <th scope="col" className="relative py-3 pl-6 pr-3">
                       <span className="sr-only">Edit</span>
@@ -97,13 +100,6 @@ export default async function CustomersTable({
                     <tr key={farmer.id} className="group">
                       <td className="whitespace-nowrap bg-white py-5 pl-4 pr-3 text-sm text-black group-first-of-type:rounded-md group-last-of-type:rounded-md sm:pl-6">
                         <div className="flex items-center gap-3">
-                          {/* <Image
-                            src="https://picsum.photos/500/500"
-                            className="rounded-full"
-                            alt={`${farmer.name}'s profile picture`}
-                            width={28}
-                            height={28}
-                          /> */}
                           <p>{farmer.name}</p>
                         </div>
                       </td>
@@ -117,12 +113,21 @@ export default async function CustomersTable({
                         {farmer.sector}
                       </td>
                       <td className="whitespace-nowrap bg-white px-4 py-5 text-sm">
-                        {farmer.village}
+                        {farmer.area}
+                      </td>
+                      <td className="whitespace-nowrap bg-white px-4 py-5 text-sm">
+                        {farmer.team_leader_id}
+                      </td>
+                      <td className="whitespace-nowrap bg-white px-4 py-5 text-sm">
+                        {farmer.field_supervisor}
+                      </td>
+                      <td className="whitespace-nowrap bg-white px-4 py-5 text-sm">
+                        {farmer.total_goods}
                       </td>
                       <td className="whitespace-nowrap py-3 pl-6 pr-3">
                         <div className="flex justify-end gap-3">
                           <UpdateFarmer id={farmer.id} />
-                          <DeleteInvoice id={farmer.id} />
+                          {!(isUser||isAcc) && <DeleteFarmer id={farmer.id} />}
                         </div>
                       </td>
                     </tr>

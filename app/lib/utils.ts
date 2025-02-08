@@ -3,9 +3,13 @@ import { Revenue } from './definitions';
 export const formatCurrency = (amount: number) => {
   return (amount / 100).toLocaleString('en-US', {
     style: 'currency',
-    currency: 'USD',
+    currency: 'RFW',
   });
 };
+
+export const formatNumber = (amount: number) => {
+  return amount.toLocaleString('en-US');
+}
 
 export const formatDateToLocal = (
   dateStr: string,

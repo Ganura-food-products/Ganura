@@ -1,6 +1,6 @@
 import { PencilIcon, PlusIcon, TrashIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
-import { deleteInvoice } from '@/app/lib/actions';
+import { deleteFarmer } from '@/app/lib/actions';
 
 export function CreateFarmer() {
   return (
@@ -26,9 +26,9 @@ export function UpdateFarmer({ id }: { id: string }) {
 }
 
 export function DeleteFarmer({ id }: { id: string }) {
-  const deleteInvoiceWithId = deleteInvoice.bind(null, id);
+  const DeleteFarmerWithId = deleteFarmer.bind(null, id);
   return (
-    <form action={deleteInvoiceWithId}>
+    <form action={DeleteFarmerWithId}>
       <button className="rounded-md border p-2 hover:bg-gray-100">
         <span className="sr-only">Delete</span>
         <TrashIcon className="w-5" />

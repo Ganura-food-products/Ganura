@@ -1,8 +1,9 @@
-import Image from 'next/image';
-import { UpdateInvoice, DeleteInvoice } from '@/app/ui/invoices/buttons';
-import InvoiceStatus from '@/app/ui/invoices/status';
-import { formatDateToLocal, formatCurrency } from '@/app/lib/utils';
-import { fetchFilteredInvoices } from '@/app/lib/data';
+import { cookies } from "next/headers";
+import { decrypt } from "@/app/lib/session";
+import { UpdateInvoice, DeleteInvoice } from "@/app/ui/invoices/buttons";
+import InvoiceStatus from "@/app/ui/invoices/status";
+import { formatDateToLocal, formatCurrency } from "@/app/lib/utils";
+import { fetchFilteredInvoices } from "@/app/lib/data";
 
 export default async function InvoicesTable({
   query,
@@ -12,7 +13,10 @@ export default async function InvoicesTable({
   currentPage: number;
 }) {
   const invoices = await fetchFilteredInvoices(query, currentPage);
-
+  const cookie = (await cookies()).get("session")?.value;
+  const session = await decrypt(cookie);
+  const isUser = session?.role === "user";
+  const isAcc = session?.role === "accountant"
   return (
     <div className="mt-6 flow-root">
       <div className="inline-block min-w-full align-middle">
@@ -26,13 +30,13 @@ export default async function InvoicesTable({
                 <div className="flex items-center justify-between border-b pb-4">
                   <div>
                     <div className="mb-2 flex items-center">
-                      <Image
+                      {/* <Image
                         src={invoice.image_url}
                         className="mr-2 rounded-full"
                         width={28}
                         height={28}
                         alt={`${invoice.name}'s profile picture`}
-                      />
+                      /> */}
                       <p>{invoice.name}</p>
                     </div>
                     <p className="text-sm text-gray-500">{invoice.email}</p>
@@ -48,7 +52,7 @@ export default async function InvoicesTable({
                   </div>
                   <div className="flex justify-end gap-2">
                     <UpdateInvoice id={invoice.id} />
-                    <DeleteInvoice id={invoice.id} />
+                    {!(isUser||isAcc) && <DeleteInvoice id={invoice.id} />}
                   </div>
                 </div>
               </div>
@@ -58,7 +62,7 @@ export default async function InvoicesTable({
             <thead className="rounded-lg text-left text-sm font-normal">
               <tr>
                 <th scope="col" className="px-4 py-5 font-medium sm:pl-6">
-                  Customer
+                  Supplier
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
                   Email
@@ -85,13 +89,9 @@ export default async function InvoicesTable({
                 >
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
                     <div className="flex items-center gap-3">
-                      <Image
-                        src={invoice.image_url}
-                        className="rounded-full"
-                        width={28}
-                        height={28}
-                        alt={`${invoice.name}'s profile picture`}
-                      />
+                      <div className="flex h-7 w-7 items-center justify-center rounded-full bg-blue-200 text-blue-700 font-semibold uppercase">
+                        {invoice.name.charAt(0)}
+                      </div>
                       <p>{invoice.name}</p>
                     </div>
                   </td>
@@ -110,7 +110,7 @@ export default async function InvoicesTable({
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
                     <div className="flex justify-end gap-3">
                       <UpdateInvoice id={invoice.id} />
-                      <DeleteInvoice id={invoice.id} />
+                      {!(isUser||isAcc) && <DeleteInvoice id={invoice.id} />}
                     </div>
                   </td>
                 </tr>

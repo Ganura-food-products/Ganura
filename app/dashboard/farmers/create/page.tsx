@@ -1,10 +1,10 @@
 import Form from '@/app/ui/farmers/create-form';
 import Breadcrumbs from '@/app/ui/invoices/breadcrumbs';
-import { fetchCustomers } from '@/app/lib/data';
- 
+import { fetchLeaders } from '@/app/lib/data';
+
 export default async function Page() {
-  const customers = await fetchCustomers();
- 
+  const leaders = await fetchLeaders();
+
   return (
     <main>
       <Breadcrumbs
@@ -17,7 +17,7 @@ export default async function Page() {
           },
         ]}
       />
-      <Form customers={customers} />
+      <Form leaders={leaders} />
     </main>
   );
 }
