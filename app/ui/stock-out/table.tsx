@@ -2,17 +2,23 @@ import { cookies } from "next/headers";
 import { decrypt } from "@/app/lib/session";
 import { UpdateInvoice, DeleteSale } from "@/app/ui/stock-out/buttons";
 
-import { fetchFilteredSales } from "@/app/lib/data";
+import { fetchFilteredSales, fetchFilteredSalesNew } from "@/app/lib/data";
 import { DownloadGoods } from "./DownloadGoods";
+import { DownloadPage } from "./DownloadPage";
 
 export default async function InvoicesTable({
   query,
   currentPage,
+  from,
+  to
 }: {
   query: string;
   currentPage: number;
+  from: string;
+  to: string;
 }) {
-  const sales = await fetchFilteredSales(query, currentPage);
+  const sales = await fetchFilteredSales(query, currentPage, from, to);
+  const salesin = await fetchFilteredSalesNew(query,from,to)
   const cookie = (await cookies()).get("session")?.value;
   const session = await decrypt(cookie);
   const isAcc = session?.role === "accountant"
@@ -108,6 +114,7 @@ export default async function InvoicesTable({
             </tbody>
           </table>
         </div>
+        <div className="w-full py-2"><DownloadPage stock={salesin}/></div>
       </div>
     </div>
   );

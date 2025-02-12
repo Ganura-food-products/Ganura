@@ -1,29 +1,27 @@
 import { UpdateInvoice, DeleteGoods } from "@/app/ui/stock-in/buttons";
 import { cookies } from "next/headers";
 import { decrypt } from "@/app/lib/session";
-import {
-  fetchFilteredInvoices,
-  fetchFilteredGoods,
-  fetchProducts,
-} from "@/app/lib/data";
+import { fetchFilteredGoodsNew, fetchFilteredGoods } from "@/app/lib/data";
 import { DownloadGoods } from "./DownloadGoods";
+import { DownloadPage } from "./DownloadPage";
 
 export default async function InvoicesTable({
   query,
   currentPage,
   from,
-  to
+  to,
 }: {
   query: string;
   currentPage: number;
-  from:string;
-  to:string;
+  from: string;
+  to: string;
 }) {
-    const cookie = (await cookies()).get("session")?.value;
-    const session = await decrypt(cookie);
-    const isUser = session?.role === "user";
-    const isAcc = session?.role === "accountant"
-  const stockins = await fetchFilteredGoods(query, currentPage,from,to);
+  const cookie = (await cookies()).get("session")?.value;
+  const session = await decrypt(cookie);
+  const isUser = session?.role === "user";
+  const isAcc = session?.role === "accountant";
+  const stockins = await fetchFilteredGoods(query, currentPage, from, to);
+  const stockinsun = await fetchFilteredGoodsNew(query, from, to);
   return (
     <div className="mt-6 flow-root">
       <div className="inline-block min-w-full align-middle">
@@ -57,7 +55,7 @@ export default async function InvoicesTable({
                   </div>
                   <div className="flex justify-end gap-2">
                     <UpdateInvoice id={good.id} />
-                    {!(isUser||isAcc) &&<DeleteGoods id={good.id} />}
+                    {!(isUser || isAcc) && <DeleteGoods id={good.id} />}
                   </div>
                 </div>
               </div>
@@ -109,7 +107,7 @@ export default async function InvoicesTable({
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
                     <div className="flex justify-end gap-3">
                       <UpdateInvoice id={stock.id} />
-                      {!(isUser || isAcc) &&<DeleteGoods id={stock.id} />}
+                      {!(isUser || isAcc) && <DeleteGoods id={stock.id} />}
                       <DownloadGoods stock={stock} />
                     </div>
                   </td>
@@ -118,6 +116,7 @@ export default async function InvoicesTable({
             </tbody>
           </table>
         </div>
+        <div className="w-full py-2"><DownloadPage stock={stockinsun}/></div>
       </div>
     </div>
   );

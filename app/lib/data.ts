@@ -668,6 +668,45 @@ export async function fetchFilteredGoods(
   }
 }
 
+export async function fetchFilteredGoodsNew(
+  query: string,
+  from: string,
+  to: string
+) {
+  try {
+    if (from !== "" && to !== "" && query !== "") {
+      const goods = await sql<GoodsTableType>`
+        SELECT * FROM goods 
+        WHERE 
+          (supplier ILIKE ${`%${query}%`} OR product ILIKE ${`%${query}%`}) AND
+          date BETWEEN ${`%${from}%`} AND ${`%${to}%`}
+        ORDER BY supplier ASC 
+       `;
+      return goods.rows;
+    } else if (from !== "" && to !== "" && query === "") {
+      const goods = await sql<GoodsTableType>`
+        SELECT * FROM goods 
+        WHERE
+          date BETWEEN ${`%${from}%`} AND ${`%${to}%`}
+        ORDER BY supplier ASC 
+       `;
+      return goods.rows;
+    } else {
+      const goods = await sql<GoodsTableType>` 
+      SELECT * FROM goods 
+      WHERE 
+        supplier ILIKE ${`%${query}%`} OR 
+        product ILIKE ${`%${query}%`}
+      ORDER BY supplier ASC 
+ `;
+      return goods.rows;
+    }
+  } catch (error) {
+    console.error("Database Error:", error);
+    throw new Error("Failed to fetch goods.");
+  }
+}
+
 export async function fetchGoodsPages(query: string) {
   try {
     const count = await sql`SELECT COUNT(*)
@@ -722,27 +761,89 @@ export async function fetchSales() {
   }
 }
 
-export async function fetchFilteredSales(query: string, currentPage: number) {
+export async function fetchFilteredSales(
+  query: string,
+  currentPage: number,
+  from: string,
+  to: string
+) {
   const offset = (currentPage - 1) * ITEMS_PER_PAGE;
 
   try {
-    const sales = await sql<SalesTableType>`
-      SELECT * 
-      FROM sales
-      WHERE 
-        product ILIKE ${`%${query}%`} OR
-        customer ILIKE ${`%${query}%`} OR
-        date::text ILIKE ${`%${query}%`}
-      ORDER BY customer ASC
-      LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset}
-    `;
-
-    return sales.rows;
+    if (from !== "" && to !== "" && query !== "") {
+      const sales = await sql<SalesTableType>`
+        SELECT * FROM sales
+        WHERE 
+          ( product ILIKE ${`%${query}%`} OR customer ILIKE ${`%${query}%`}) AND 
+          date BETWEEN ${`%${from}%`} AND ${`%${to}%`}
+        ORDER BY customer ASC
+        LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset}
+      `;
+      return sales.rows;
+    } else if (from !== "" && to !== "" && query === "") {
+      const sales = await sql<SalesTableType>`
+        SELECT * FROM sales
+        WHERE 
+          date BETWEEN ${`%${from}%`} AND ${`%${to}%`}
+        ORDER BY customer ASC
+        LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset}
+      `;
+      return sales.rows;
+    } else {
+      const sales = await sql<SalesTableType>`
+        SELECT * FROM sales
+        WHERE 
+           product ILIKE ${`%${query}%`} OR customer ILIKE ${`%${query}%`} 
+        ORDER BY customer ASC
+        LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset}
+      `;
+      return sales.rows;
+    }
   } catch (error) {
     console.error("Database Error:", error);
     throw new Error("Failed to fetch sales.");
   }
 }
+export async function fetchFilteredSalesNew(
+  query: string,
+  from: string,
+  to: string
+) {
+
+  try {
+    if (from !== "" && to !== "" && query !== "") {
+      const sales = await sql<SalesTableType>`
+        SELECT * FROM sales
+        WHERE 
+          ( product ILIKE ${`%${query}%`} OR customer ILIKE ${`%${query}%`}) AND 
+          date BETWEEN ${`%${from}%`} AND ${`%${to}%`}
+        ORDER BY customer ASC
+      `;
+      return sales.rows;
+    } else if (from !== "" && to !== "" && query === "") {
+      const sales = await sql<SalesTableType>`
+        SELECT * FROM sales
+        WHERE 
+          date BETWEEN ${`%${from}%`} AND ${`%${to}%`}
+        ORDER BY customer ASC
+      `;
+      return sales.rows;
+    } else {
+      const sales = await sql<SalesTableType>`
+        SELECT * FROM sales
+        WHERE 
+           product ILIKE ${`%${query}%`} OR customer ILIKE ${`%${query}%`} 
+        ORDER BY customer ASC
+      `;
+      return sales.rows;
+    }
+  } catch (error) {
+    console.error("Database Error:", error);
+    throw new Error("Failed to fetch sales.");
+  }
+}
+
+
 
 export async function fetchSaleById(id: string) {
   try {
