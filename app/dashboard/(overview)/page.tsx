@@ -4,7 +4,7 @@ import LatestInvoices from '@/app/ui/dashboard/latest-invoices';
 
 
 
-import { lusitana, poppins } from '@/app/ui/fonts';
+import { poppins } from '@/app/ui/fonts';
 
 import { Suspense } from 'react';
 import {

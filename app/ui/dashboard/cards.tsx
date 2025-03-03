@@ -34,12 +34,12 @@ export default async function CardWrapper() {
 
       <Card
         title="Available Basilic Seeds(KG)"
-        value={totalQuantityBasilicSeedsStock - totalQuantityBasilicSeedsSales}
+        value={(totalQuantityBasilicSeedsStock - totalQuantityBasilicSeedsSales).toLocaleString()}
         type="Stock"
       />
       <Card
         title="Available Chia Seeds(KG)"
-        value={totalQuantityChiaSeedsStock - totalQuantityChiaSeedsSales}
+        value={(totalQuantityChiaSeedsStock - totalQuantityChiaSeedsSales).toLocaleString()}
         type="Stock"
       />
       <Card title="Total Area(Ha)" value={totalArea} type="invoices" />

@@ -3,7 +3,8 @@ import { decrypt } from "@/app/lib/session";
 import { UpdateInvoice, DeleteInvoice } from "@/app/ui/invoices/buttons";
 import InvoiceStatus from "@/app/ui/invoices/status";
 import { formatDateToLocal, formatCurrency } from "@/app/lib/utils";
-import { fetchFilteredInvoices } from "@/app/lib/data";
+import { fetchFilteredInvoices, fetchFilteredInvoicesNew } from "@/app/lib/data";
+import { DownloadPage } from "./DownloadPage";
 
 export default async function InvoicesTable({
   query,
@@ -17,6 +18,7 @@ export default async function InvoicesTable({
   const session = await decrypt(cookie);
   const isUser = session?.role === "user";
   const isAcc = session?.role === "accountant"
+  const inv = await fetchFilteredInvoicesNew(query)
   return (
     <div className="mt-6 flow-root">
       <div className="inline-block min-w-full align-middle">
@@ -68,6 +70,9 @@ export default async function InvoicesTable({
                   Email
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
+                  Telephone
+                </th>
+                <th scope="col" className="px-3 py-5 font-medium">
                   Amount
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
@@ -99,6 +104,9 @@ export default async function InvoicesTable({
                     {invoice.email}
                   </td>
                   <td className="whitespace-nowrap px-3 py-3">
+                    {invoice.phone_number}
+                  </td>
+                  <td className="whitespace-nowrap px-3 py-3">
                     {formatCurrency(invoice.amount)}
                   </td>
                   <td className="whitespace-nowrap px-3 py-3">
@@ -118,6 +126,7 @@ export default async function InvoicesTable({
             </tbody>
           </table>
         </div>
+        <div className="w-full py-2"><DownloadPage invoices={inv}/></div>
       </div>
     </div>
   );
