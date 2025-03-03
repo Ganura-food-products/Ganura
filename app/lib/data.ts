@@ -132,12 +132,14 @@ export async function fetchFilteredInvoices(
         invoices.date,
         invoices.status,
         farmers.name,
+        farmers.phone_number,
         farmers.email
       FROM invoices
       JOIN farmers ON invoices.customer_id = farmers.id
       WHERE
         farmers.name ILIKE ${`%${query}%`} OR
         farmers.email ILIKE ${`%${query}%`} OR
+        farmers.phone_number ILIKE ${`%${query}%`} OR
         invoices.amount::text ILIKE ${`%${query}%`} OR
         invoices.date::text ILIKE ${`%${query}%`} OR
         invoices.status ILIKE ${`%${query}%`}
@@ -149,6 +151,37 @@ export async function fetchFilteredInvoices(
   } catch (error) {
     console.error("Database Error:", error);
     throw new Error("Failed to fetch invoices.");
+  }
+}
+
+export async function fetchFilteredInvoicesNew(
+  query: string,
+) {
+  try {
+    const invoices = await sql<InvoicesTable>`
+      SELECT
+        invoices.id,
+        invoices.amount,
+        invoices.date,
+        invoices.status,
+        farmers.name,
+        farmers.phone_number,
+        farmers.email
+      FROM invoices
+      JOIN farmers ON invoices.customer_id = farmers.id
+      WHERE
+        farmers.name ILIKE ${`%${query}%`} OR
+        farmers.email ILIKE ${`%${query}%`} OR
+        farmers.phone_number ILIKE ${`%${query}%`} OR
+        invoices.amount::text ILIKE ${`%${query}%`} OR
+        invoices.date::text ILIKE ${`%${query}%`} OR
+        invoices.status ILIKE ${`%${query}%`}
+      ORDER BY invoices.date DESC
+    `;
+    return invoices.rows;
+  } catch (error) {
+    console.error("Database Error:", error);
+    throw new Error("Failed to fetch invoices. new");
   }
 }
 
@@ -381,7 +414,7 @@ export async function fetchFilteredFarmers(query: string, currentPage: number) {
       FROM farmers
       LEFT JOIN goods ON goods.supplier = farmers.name
       WHERE farmers.name ILIKE ${`%${query}%`} OR
-       farmerS.email ILIKE ${`%${query}%`} OR
+       farmers.email ILIKE ${`%${query}%`} OR
        farmers.city ILIKE ${`%${query}%`} OR
        farmers.district ILIKE ${`%${query}%`} OR
        farmers.sector ILIKE ${`%${query}%`} 

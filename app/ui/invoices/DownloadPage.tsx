@@ -1,25 +1,26 @@
 "use client";
 import { TableCellsIcon } from "@heroicons/react/24/outline";
 
-
 import * as XLSX from "xlsx";
-import { GoodsTableType } from "@/app/lib/definitions";
+import { InvoicesTable } from "@/app/lib/definitions";
+import { formatCurrency } from "@/app/lib/utils";
 
-export function DownloadPage({ stock }: { stock: GoodsTableType[] }) {
+export function DownloadPage({ invoices }: { invoices: InvoicesTable[] }) {
   const handleDownload = () => {
     const invoiceNumber = `INV-${Math.floor(Math.random() * 10000)}`;
-    const fileName = `StockIns_${invoiceNumber}.xlsx`;
-
-    const tableData = stock.map((item) => ({
-      Supplier: item.supplier,
-      Product: item.product,
-      Quantity: item.quantity,
-      Date: item.date ? new Date(item.date).toLocaleDateString() : 'N/A',
+    const fileName = `Invoicess_${invoiceNumber}.xlsx`;
+    const tableData = invoices.map((item) => ({
+      Supplier: item.name,
+      Email: item.email,
+      Telephone: item.phone_number,
+      Status: item.status,
+      Amount: formatCurrency(item.amount),
+      Date: item.date ? new Date(item.date).toLocaleDateString() : "N/A",
     }));
 
     const ws = XLSX.utils.json_to_sheet(tableData);
     const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Stock Report');
+    XLSX.utils.book_append_sheet(wb, ws, "Invoice report");
     XLSX.writeFile(wb, fileName);
   };
   return (
