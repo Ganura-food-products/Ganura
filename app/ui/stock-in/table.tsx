@@ -77,6 +77,9 @@ export default async function InvoicesTable({
                   District
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
+                  Sector
+                </th>
+                <th scope="col" className="px-3 py-5 font-medium">
                   Quantity(KG)
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
@@ -105,6 +108,9 @@ export default async function InvoicesTable({
                   </td>
                   <td className="whitespace-nowrap px-3 py-3">
                     {stock.district}
+                  </td>
+                  <td className="whitespace-nowrap px-3 py-3">
+                    {stock.sector}
                   </td>
                   <td className="whitespace-nowrap px-3 py-3">
                     {stock.quantity}

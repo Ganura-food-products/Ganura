@@ -669,6 +669,7 @@ export async function fetchFilteredGoods(
         SELECT 
           goods.*,
           farmers.phone_number,
+          farmers.sector,
           farmers.district
         FROM goods
         LEFT JOIN farmers on farmers.name = goods.supplier
@@ -676,6 +677,7 @@ export async function fetchFilteredGoods(
           (goods.supplier ILIKE ${`%${query}%`} OR 
           goods.product ILIKE ${`%${query}%`} OR
           farmers.district ILIKE ${`%${query}%`} OR
+          farmers.sector ILIKE ${`%${query}%`} OR
           farmers.phone_number ILIKE ${`%${query}%`}) AND
           goods.date BETWEEN ${`%${from}%`} AND ${`%${to}%`}
         ORDER BY goods.supplier ASC 
@@ -687,6 +689,7 @@ export async function fetchFilteredGoods(
         SELECT 
           goods.*, 
           farmers.district, 
+          farmers.sector,
           farmers.phone_number 
         FROM goods
         LEFT JOIN farmers ON farmers.name = goods.supplier
@@ -700,7 +703,8 @@ export async function fetchFilteredGoods(
       const goods = await sql<GoodsTableType>` 
       SELECT
           goods.*, 
-          farmers.district, 
+          farmers.district,
+          farmers.sector, 
           farmers.phone_number 
       FROM goods
       LEFT JOIN farmers ON farmers.name = goods.supplier
@@ -708,6 +712,7 @@ export async function fetchFilteredGoods(
         goods.supplier ILIKE ${`%${query}%`} OR 
         goods.product ILIKE ${`%${query}%`} OR
         farmers.district ILIKE ${`%${query}%`} OR
+        farmers.sector ILIKE ${`%${query}%`} OR
         farmers.phone_number ILIKE ${`%${query}%`} 
       ORDER BY goods.supplier ASC 
       LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset} `;
@@ -730,13 +735,15 @@ export async function fetchFilteredGoodsNew(
         SELECT 
           goods.*,
           farmers.phone_number,
-          farmers.district
+          farmers.district,
+          farmers.sector
         FROM goods
         LEFT JOIN farmers on farmers.name = goods.supplier
         WHERE 
           (goods.supplier ILIKE ${`%${query}%`} OR 
           goods.product ILIKE ${`%${query}%`} OR
           farmers.district ILIKE ${`%${query}%`} OR
+          farmers.sector ILIKE ${`%${query}%`} OR
           farmers.phone_number ILIKE ${`%${query}%`}) AND
           goods.date BETWEEN ${`%${from}%`} AND ${`%${to}%`}
         ORDER BY goods.supplier ASC 
@@ -746,7 +753,8 @@ export async function fetchFilteredGoodsNew(
       const goods = await sql<GoodsTableType>`
         SELECT 
           goods.*, 
-          farmers.district, 
+          farmers.district,
+          farmers.sector, 
           farmers.phone_number 
         FROM goods
         LEFT JOIN farmers ON farmers.name = goods.supplier
@@ -760,6 +768,7 @@ export async function fetchFilteredGoodsNew(
       SELECT
           goods.*, 
           farmers.district, 
+          farmers.sector,
           farmers.phone_number 
       FROM goods
       LEFT JOIN farmers ON farmers.name = goods.supplier
@@ -767,6 +776,7 @@ export async function fetchFilteredGoodsNew(
         goods.supplier ILIKE ${`%${query}%`} OR 
         goods.product ILIKE ${`%${query}%`} OR
         farmers.district ILIKE ${`%${query}%`} OR
+        farmers.sector ILIKE ${`%${query}%`} OR
         farmers.phone_number ILIKE ${`%${query}%`} 
       ORDER BY goods.supplier ASC `;
       return goods.rows;

@@ -198,6 +198,7 @@ export type GoodsTableType = {
   date: string;
   phone_number: string;
   district: string;
+  sector: string;
 };
 
 export type GoodsForm = {

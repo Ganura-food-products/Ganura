@@ -16,6 +16,7 @@ export function DownloadPage({ stock }: { stock: GoodsTableType[] }) {
       Quantity: item.quantity,
       Telephone: item.phone_number,
       District: item.district,
+      Sector: item.sector,
       Date: item.date ? new Date(item.date).toLocaleDateString() : 'N/A',
     }));
 
