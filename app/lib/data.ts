@@ -154,9 +154,7 @@ export async function fetchFilteredInvoices(
   }
 }
 
-export async function fetchFilteredInvoicesNew(
-  query: string,
-) {
+export async function fetchFilteredInvoicesNew(query: string) {
   try {
     const invoices = await sql<InvoicesTable>`
       SELECT
@@ -668,30 +666,50 @@ export async function fetchFilteredGoods(
   try {
     if (from !== "" && to !== "" && query !== "") {
       const goods = await sql<GoodsTableType>`
-        SELECT * FROM goods 
+        SELECT 
+          goods.*,
+          farmers.phone_number,
+          farmers.district
+        FROM goods
+        LEFT JOIN farmers on farmers.name = goods.supplier
         WHERE 
-          (supplier ILIKE ${`%${query}%`} OR product ILIKE ${`%${query}%`}) AND
-          date BETWEEN ${`%${from}%`} AND ${`%${to}%`}
-        ORDER BY supplier ASC 
+          (goods.supplier ILIKE ${`%${query}%`} OR 
+          goods.product ILIKE ${`%${query}%`} OR
+          farmers.district ILIKE ${`%${query}%`} OR
+          farmers.phone_number ILIKE ${`%${query}%`}) AND
+          goods.date BETWEEN ${`%${from}%`} AND ${`%${to}%`}
+        ORDER BY goods.supplier ASC 
         LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset}
        `;
       return goods.rows;
     } else if (from !== "" && to !== "" && query === "") {
       const goods = await sql<GoodsTableType>`
-        SELECT * FROM goods 
+        SELECT 
+          goods.*, 
+          farmers.district, 
+          farmers.phone_number 
+        FROM goods
+        LEFT JOIN farmers ON farmers.name = goods.supplier
         WHERE
-          date BETWEEN ${`%${from}%`} AND ${`%${to}%`}
-        ORDER BY supplier ASC 
+          goods.date BETWEEN ${`%${from}%`} AND ${`%${to}%`}
+        ORDER BY goods.supplier ASC 
         LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset}
        `;
       return goods.rows;
     } else {
       const goods = await sql<GoodsTableType>` 
-      SELECT * FROM goods 
+      SELECT
+          goods.*, 
+          farmers.district, 
+          farmers.phone_number 
+      FROM goods
+      LEFT JOIN farmers ON farmers.name = goods.supplier
       WHERE 
-        supplier ILIKE ${`%${query}%`} OR 
-        product ILIKE ${`%${query}%`}
-      ORDER BY supplier ASC 
+        goods.supplier ILIKE ${`%${query}%`} OR 
+        goods.product ILIKE ${`%${query}%`} OR
+        farmers.district ILIKE ${`%${query}%`} OR
+        farmers.phone_number ILIKE ${`%${query}%`} 
+      ORDER BY goods.supplier ASC 
       LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset} `;
       return goods.rows;
     }
@@ -709,29 +727,48 @@ export async function fetchFilteredGoodsNew(
   try {
     if (from !== "" && to !== "" && query !== "") {
       const goods = await sql<GoodsTableType>`
-        SELECT * FROM goods 
+        SELECT 
+          goods.*,
+          farmers.phone_number,
+          farmers.district
+        FROM goods
+        LEFT JOIN farmers on farmers.name = goods.supplier
         WHERE 
-          (supplier ILIKE ${`%${query}%`} OR product ILIKE ${`%${query}%`}) AND
-          date BETWEEN ${`%${from}%`} AND ${`%${to}%`}
-        ORDER BY supplier ASC 
+          (goods.supplier ILIKE ${`%${query}%`} OR 
+          goods.product ILIKE ${`%${query}%`} OR
+          farmers.district ILIKE ${`%${query}%`} OR
+          farmers.phone_number ILIKE ${`%${query}%`}) AND
+          goods.date BETWEEN ${`%${from}%`} AND ${`%${to}%`}
+        ORDER BY goods.supplier ASC 
        `;
       return goods.rows;
     } else if (from !== "" && to !== "" && query === "") {
       const goods = await sql<GoodsTableType>`
-        SELECT * FROM goods 
+        SELECT 
+          goods.*, 
+          farmers.district, 
+          farmers.phone_number 
+        FROM goods
+        LEFT JOIN farmers ON farmers.name = goods.supplier
         WHERE
-          date BETWEEN ${`%${from}%`} AND ${`%${to}%`}
-        ORDER BY supplier ASC 
+          goods.date BETWEEN ${`%${from}%`} AND ${`%${to}%`}
+        ORDER BY goods.supplier ASC 
        `;
       return goods.rows;
     } else {
       const goods = await sql<GoodsTableType>` 
-      SELECT * FROM goods 
+      SELECT
+          goods.*, 
+          farmers.district, 
+          farmers.phone_number 
+      FROM goods
+      LEFT JOIN farmers ON farmers.name = goods.supplier
       WHERE 
-        supplier ILIKE ${`%${query}%`} OR 
-        product ILIKE ${`%${query}%`}
-      ORDER BY supplier ASC 
- `;
+        goods.supplier ILIKE ${`%${query}%`} OR 
+        goods.product ILIKE ${`%${query}%`} OR
+        farmers.district ILIKE ${`%${query}%`} OR
+        farmers.phone_number ILIKE ${`%${query}%`} 
+      ORDER BY goods.supplier ASC `;
       return goods.rows;
     }
   } catch (error) {
@@ -739,6 +776,45 @@ export async function fetchFilteredGoodsNew(
     throw new Error("Failed to fetch goods.");
   }
 }
+
+// export async function fetchFilteredGoodsNew(
+//   query: string,
+//   from: string,
+//   to: string
+// ) {
+//   try {
+//     if (from !== "" && to !== "" && query !== "") {
+//       const goods = await sql<GoodsTableType>`
+//         SELECT * FROM goods 
+//         WHERE 
+//           (supplier ILIKE ${`%${query}%`} OR product ILIKE ${`%${query}%`}) AND
+//           date BETWEEN ${`%${from}%`} AND ${`%${to}%`}
+//         ORDER BY supplier ASC 
+//        `;
+//       return goods.rows;
+//     } else if (from !== "" && to !== "" && query === "") {
+//       const goods = await sql<GoodsTableType>`
+//         SELECT * FROM goods 
+//         WHERE
+//           date BETWEEN ${`%${from}%`} AND ${`%${to}%`}
+//         ORDER BY supplier ASC 
+//        `;
+//       return goods.rows;
+//     } else {
+//       const goods = await sql<GoodsTableType>` 
+//       SELECT * FROM goods 
+//       WHERE 
+//         supplier ILIKE ${`%${query}%`} OR 
+//         product ILIKE ${`%${query}%`}
+//       ORDER BY supplier ASC 
+//  `;
+//       return goods.rows;
+//     }
+//   } catch (error) {
+//     console.error("Database Error:", error);
+//     throw new Error("Failed to fetch goods.");
+//   }
+// }
 
 export async function fetchGoodsPages(query: string) {
   try {
@@ -842,7 +918,6 @@ export async function fetchFilteredSalesNew(
   from: string,
   to: string
 ) {
-
   try {
     if (from !== "" && to !== "" && query !== "") {
       const sales = await sql<SalesTableType>`
@@ -875,8 +950,6 @@ export async function fetchFilteredSalesNew(
     throw new Error("Failed to fetch sales.");
   }
 }
-
-
 
 export async function fetchSaleById(id: string) {
   try {

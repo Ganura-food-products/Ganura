@@ -196,6 +196,8 @@ export type GoodsTableType = {
   supplier: string;
   quantity: number;
   date: string;
+  phone_number: string;
+  district: string;
 };
 
 export type GoodsForm = {
