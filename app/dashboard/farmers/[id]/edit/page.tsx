@@ -5,15 +5,17 @@ import {
   fetchFarmerById,
   fetchInvoiceById,
   fetchLeaders,
+  fetchSeasons,
 } from '@/app/lib/data';
 import { notFound } from 'next/navigation';
 
 export default async function Page(props: { params: Promise<{ id: string }> }) {
   const params = await props.params;
   const id = params.id;
-  const [farmer, leaders] = await Promise.all([
+  const [farmer, leaders, seasons] = await Promise.all([
     fetchFarmerById(id),
     fetchLeaders(),
+    fetchSeasons(),
   ]);
   if (!farmer) {
     notFound();
@@ -30,7 +32,7 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
           },
         ]}
       />
-      <Form farmer={farmer} leaders={leaders} />
+      <Form farmer={farmer} leaders={leaders} seasons={seasons} />
     </main>
   );
 }

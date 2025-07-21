@@ -1,27 +1,35 @@
-import { UpdateInvoice, DeleteGoods } from "@/app/ui/stock-in/buttons";
-import { cookies } from "next/headers";
-import { decrypt } from "@/app/lib/session";
-import { fetchFilteredGoodsNew, fetchFilteredGoods } from "@/app/lib/data";
-import { DownloadGoods } from "./DownloadGoods";
-import { DownloadPage } from "./DownloadPage";
+import { UpdateInvoice, DeleteGoods } from '@/app/ui/stock-in/buttons';
+import { cookies } from 'next/headers';
+import { decrypt } from '@/app/lib/session';
+import { fetchFilteredGoodsNew, fetchFilteredGoods } from '@/app/lib/data';
+import { DownloadGoods } from './DownloadGoods';
+import { DownloadPage } from './DownloadPage';
 
 export default async function InvoicesTable({
   query,
   currentPage,
   from,
   to,
+  seasonId,
 }: {
   query: string;
   currentPage: number;
   from: string;
   to: string;
+  seasonId?: string;
 }) {
-  const cookie = (await cookies()).get("session")?.value;
+  const cookie = (await cookies()).get('session')?.value;
   const session = await decrypt(cookie);
-  const isUser = session?.role === "user";
-  const isAcc = session?.role === "accountant";
-  const stockins = await fetchFilteredGoods(query, currentPage, from, to);
-  const stockinsun = await fetchFilteredGoodsNew(query, from, to);
+  const isUser = session?.role === 'user';
+  const isAcc = session?.role === 'accountant';
+  const stockins = await fetchFilteredGoods(
+    query,
+    currentPage,
+    from,
+    to,
+    seasonId
+  );
+  const stockinsun = await fetchFilteredGoodsNew(query, from, to, seasonId);
   return (
     <div className="mt-6 flow-root">
       <div className="inline-block min-w-full align-middle">
@@ -42,15 +50,21 @@ export default async function InvoicesTable({
                       <p className="text-sm text-gray-500">Quantity (Kg):</p>
                       <p className="text-md text-gray-900">{good.quantity}</p>
                     </div>
+                    <div className="flex items-center gap-2 mt-2">
+                      <p className="text-sm text-gray-500">Season:</p>
+                      <p className="text-md text-gray-900">
+                        {(good as any).season_name || 'No Season'}
+                      </p>
+                    </div>
                   </div>
                 </div>
                 <div className="flex w-full items-center justify-between pt-4">
                   <div>
                     <p>
-                      {" "}
+                      {' '}
                       {good.date
                         ? new Date(good.date).toLocaleDateString()
-                        : ""}
+                        : ''}
                     </p>
                   </div>
                   <div className="flex justify-end gap-2">
@@ -76,6 +90,9 @@ export default async function InvoicesTable({
                 <th scope="col" className="px-3 py-5 font-medium">
                   Date
                 </th>
+                <th scope="col" className="px-3 py-5 font-medium">
+                  Season
+                </th>
 
                 <th scope="col" className="relative py-3 pl-6 pr-3">
                   <span className="sr-only">Edit</span>
@@ -99,10 +116,13 @@ export default async function InvoicesTable({
                   </td>
 
                   <td className="whitespace-nowrap px-3 py-3">
-                    {" "}
+                    {' '}
                     {stock.date
                       ? new Date(stock.date).toLocaleDateString()
-                      : ""}
+                      : ''}
+                  </td>
+                  <td className="whitespace-nowrap px-3 py-3">
+                    {(stock as any).season_name || 'No Season'}
                   </td>
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
                     <div className="flex justify-end gap-3">
@@ -116,7 +136,9 @@ export default async function InvoicesTable({
             </tbody>
           </table>
         </div>
-        <div className="w-full py-2"><DownloadPage stock={stockinsun}/></div>
+        <div className="w-full py-2">
+          <DownloadPage stock={stockinsun} />
+        </div>
       </div>
     </div>
   );

@@ -1,8 +1,8 @@
-import { cookies } from "next/headers";
-import { decrypt } from "@/app/lib/session";
-import { fetchFilteredFarmers } from "@/app/lib/data";
+import { cookies } from 'next/headers';
+import { decrypt } from '@/app/lib/session';
+import { fetchFilteredFarmers } from '@/app/lib/data';
 
-import { DeleteFarmer, UpdateFarmer } from "./buttons";
+import { DeleteFarmer, UpdateFarmer } from './buttons';
 
 export default async function CustomersTable({
   query,
@@ -11,10 +11,10 @@ export default async function CustomersTable({
   query: string;
   currentPage: number;
 }) {
-  const cookie = (await cookies()).get("session")?.value;
+  const cookie = (await cookies()).get('session')?.value;
   const session = await decrypt(cookie);
-  const isUser = session?.role === "user";
-  const isAcc = session?.role === "accountant"
+  const isUser = session?.role === 'user';
+  const isAcc = session?.role === 'accountant';
   const farmers = await fetchFilteredFarmers(query, currentPage);
   return (
     <div className="w-full">
@@ -35,7 +35,9 @@ export default async function CustomersTable({
                             <p>{farmer.name}</p>
                             <div className="flex justify-end gap-3">
                               <UpdateFarmer id={farmer.id} />
-                              {!(isUser||isAcc) && <DeleteFarmer id={farmer.id} />}
+                              {!(isUser || isAcc) && (
+                                <DeleteFarmer id={farmer.id} />
+                              )}
                             </div>
                           </div>
                         </div>
@@ -45,9 +47,10 @@ export default async function CustomersTable({
                           </a>
                         </p>
                         <p className="text-sm text-gray-500">
-                          <a href={`tel:${farmer.phone_number}`}>
-                            {farmer.total_goods}
-                          </a>
+                          Season: {(farmer as any).season_name || 'No Season'}
+                        </p>
+                        <p className="text-sm text-gray-500">
+                          Total Stock: {farmer.total_goods} KG
                         </p>
                       </div>
                     </div>
@@ -87,6 +90,9 @@ export default async function CustomersTable({
                       Field Supervisor
                     </th>
                     <th scope="col" className="px-4 py-5 font-medium">
+                      Season
+                    </th>
+                    <th scope="col" className="px-4 py-5 font-medium">
                       Provided Stock(KG)
                     </th>
                     <th scope="col" className="relative py-3 pl-6 pr-3">
@@ -122,12 +128,17 @@ export default async function CustomersTable({
                         {farmer.field_supervisor}
                       </td>
                       <td className="whitespace-nowrap bg-white px-4 py-5 text-sm">
+                        {(farmer as any).season_name || 'No Season'}
+                      </td>
+                      <td className="whitespace-nowrap bg-white px-4 py-5 text-sm">
                         {farmer.total_goods}
                       </td>
                       <td className="whitespace-nowrap py-3 pl-6 pr-3">
                         <div className="flex justify-end gap-3">
                           <UpdateFarmer id={farmer.id} />
-                          {!(isUser||isAcc) && <DeleteFarmer id={farmer.id} />}
+                          {!(isUser || isAcc) && (
+                            <DeleteFarmer id={farmer.id} />
+                          )}
                         </div>
                       </td>
                     </tr>

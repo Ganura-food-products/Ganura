@@ -1,9 +1,17 @@
 import Form from '@/app/ui/stock-in/create-form';
 import Breadcrumbs from '@/app/ui/invoices/breadcrumbs';
-import { fetchFarmers, fetchLeaders, fetchProducts } from '@/app/lib/data';
+import {
+  fetchFarmers,
+  fetchLeaders,
+  fetchProducts,
+  fetchSeasons,
+} from '@/app/lib/data';
 export default async function Page() {
-  const farmers = await fetchFarmers();
-  const products = await fetchProducts();
+  const [farmers, products, seasons] = await Promise.all([
+    fetchFarmers(),
+    fetchProducts(),
+    fetchSeasons(),
+  ]);
 
   return (
     <main>
@@ -17,7 +25,7 @@ export default async function Page() {
           },
         ]}
       />
-      <Form farmers={farmers} products={products} />
+      <Form farmers={farmers} products={products} seasons={seasons} />
     </main>
   );
 }

@@ -2,7 +2,7 @@
 // It describes the shape of the data, and what data type each property should accept.
 // For simplicity of teaching, we're manually defining these types.
 // However, these types are generated automatically if you're using an ORM such as Prisma.
-import { JWTPayload } from "jose";
+import { JWTPayload } from 'jose';
 export type User = {
   id: string;
   name: string;
@@ -11,7 +11,7 @@ export type User = {
   role: string;
 };
 
-export interface SessionPayload extends JWTPayload{
+export interface SessionPayload extends JWTPayload {
   userId: string;
   // email: string;
   role: string;
@@ -32,7 +32,7 @@ export type Invoice = {
   date: string;
   // In TypeScript, this is called a string union type.
   // It means that the "status" property can only be one of the two strings: 'pending' or 'paid'.
-  status: "pending" | "paid";
+  status: 'pending' | 'paid';
 };
 
 export type Revenue = {
@@ -49,7 +49,7 @@ export type LatestInvoice = {
 };
 
 // The database returns a number for amount, but we later format it to a string with the formatCurrency function
-export type LatestInvoiceRaw = Omit<LatestInvoice, "amount"> & {
+export type LatestInvoiceRaw = Omit<LatestInvoice, 'amount'> & {
   amount: number;
 };
 
@@ -62,7 +62,7 @@ export type InvoicesTable = {
   image_url: string;
   date: string;
   amount: number;
-  status: "pending" | "paid";
+  status: 'pending' | 'paid';
 };
 
 export type CustomersTableType = {
@@ -79,8 +79,8 @@ export type UserTable = {
   name: string;
   email: string;
   password: string;
-  role: "admin"|"user"|"accountant";
-}
+  role: 'admin' | 'user' | 'accountant';
+};
 
 export type FormattedCustomersTable = {
   id: string;
@@ -121,7 +121,7 @@ export type InvoiceForm = {
   id: string;
   customer_id: string;
   amount: number;
-  status: "pending" | "paid";
+  status: 'pending' | 'paid';
 };
 
 export type FarmerForm = {
@@ -136,6 +136,7 @@ export type FarmerForm = {
   village: string;
   team_leader_id: string;
   area: number;
+  season_id: string;
 };
 
 export type CustomerForm = {
@@ -159,6 +160,8 @@ export type FarmersTableType = {
   team_leader_id: string;
   field_supervisor: string;
   area: number;
+  season_id: string;
+  season_name?: string;
 };
 
 export type LeadersTableType = {
@@ -196,6 +199,8 @@ export type GoodsTableType = {
   supplier: string;
   quantity: number;
   date: string;
+  season_id: string;
+  season_name?: string;
 };
 
 export type GoodsForm = {
@@ -204,6 +209,7 @@ export type GoodsForm = {
   supplier: string;
   quantity: number;
   date: string;
+  season_id: string;
 };
 
 export type SalesForm = {
@@ -212,6 +218,7 @@ export type SalesForm = {
   customer: string;
   quantity: number;
   date: string;
+  season_id: string;
 };
 
 export type SalesTableType = {
@@ -220,6 +227,8 @@ export type SalesTableType = {
   customer: string;
   quantity: number;
   date: string;
+  season_id: string;
+  season_name?: string;
 };
 
 export type ProductsTableType = {
@@ -241,4 +250,35 @@ export type SupervisorsTableType = {
   sector: string;
   cell: string;
   village: string;
+};
+
+export type Season = {
+  id: string;
+  name: string;
+  start_date: string;
+  end_date: string;
+  status: 'active' | 'inactive';
+  created_at: string;
+};
+
+export type SeasonForm = {
+  id: string;
+  name: string;
+  start_date: string;
+  end_date: string;
+  status: 'active' | 'inactive';
+};
+
+export type SeasonField = {
+  id: string;
+  name: string;
+};
+
+export type SeasonsTableType = {
+  id: string;
+  name: string;
+  start_date: string;
+  end_date: string;
+  status: 'active' | 'inactive';
+  created_at: string;
 };

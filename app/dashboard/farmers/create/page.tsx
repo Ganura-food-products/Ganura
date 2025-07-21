@@ -1,9 +1,12 @@
 import Form from '@/app/ui/farmers/create-form';
 import Breadcrumbs from '@/app/ui/invoices/breadcrumbs';
-import { fetchLeaders } from '@/app/lib/data';
+import { fetchLeaders, fetchSeasons } from '@/app/lib/data';
 
 export default async function Page() {
-  const leaders = await fetchLeaders();
+  const [leaders, seasons] = await Promise.all([
+    fetchLeaders(),
+    fetchSeasons(),
+  ]);
 
   return (
     <main>
@@ -17,7 +20,7 @@ export default async function Page() {
           },
         ]}
       />
-      <Form leaders={leaders} />
+      <Form leaders={leaders} seasons={seasons} />
     </main>
   );
 }

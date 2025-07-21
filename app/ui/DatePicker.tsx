@@ -1,18 +1,18 @@
-"use client";
-import * as React from "react";
-import { addDays, format } from "date-fns";
-import { CalendarIcon } from "lucide-react";
-import { DateRange } from "react-day-picker";
-import { useDebouncedCallback } from "use-debounce";
-import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
-import { useSearchParams, usePathname, useRouter } from "next/navigation";
+'use client';
+import * as React from 'react';
+import { addDays, format } from 'date-fns';
+import { CalendarIcon } from 'lucide-react';
+import { DateRange } from 'react-day-picker';
+import { useDebouncedCallback } from 'use-debounce';
+import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/button';
+import { Calendar } from '@/components/ui/calendar';
+import { useSearchParams, usePathname, useRouter } from 'next/navigation';
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover";
+} from '@/components/ui/popover';
 
 export function DatePickerWithRange({
   className,
@@ -20,9 +20,12 @@ export function DatePickerWithRange({
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const { replace } = useRouter();
+  const [isPending, startTransition] = React.useTransition();
+  const [isLoading, setIsLoading] = React.useState(false);
+
   const [date, setDate] = React.useState<DateRange | undefined>(() => {
-    const fromParam = searchParams.get("from");
-    const toParam = searchParams.get("to");
+    const fromParam = searchParams.get('from');
+    const toParam = searchParams.get('to');
     if (fromParam && toParam) {
       return {
         from: new Date(fromParam),
@@ -32,52 +35,55 @@ export function DatePickerWithRange({
     return undefined;
   });
 
-  const handleDateChange = useDebouncedCallback((newDate: DateRange | undefined) => {
-    setDate(newDate);
-    const params = new URLSearchParams(searchParams);
-    
-    if (newDate?.from) {
-      params.set('from', format(newDate.from, 'yyyy-MM-dd'));
-    } else {
-      params.delete('from');
-    }
-    
-    if (newDate?.to) {
-      params.set('to', format(newDate.to, 'yyyy-MM-dd'));
-    } else {
-      params.delete('to');
-    }
+  const handleDateChange = useDebouncedCallback(
+    (newDate: DateRange | undefined) => {
+      setDate(newDate);
+      setIsLoading(true);
 
-    params.set('page', '1');
-    replace(`${pathname}?${params.toString()}`);
-  },200);
-  console.log(date);
+      const params = new URLSearchParams(searchParams);
+
+      if (newDate?.from) {
+        params.set('from', format(newDate.from, 'yyyy-MM-dd'));
+      } else {
+        params.delete('from');
+      }
+
+      if (newDate?.to) {
+        params.set('to', format(newDate.to, 'yyyy-MM-dd'));
+      } else {
+        params.delete('to');
+      }
+
+      params.set('page', '1');
+
+      startTransition(() => {
+        replace(`${pathname}?${params.toString()}`);
+        // Reset loading state after navigation
+        setTimeout(() => setIsLoading(false), 500);
+      });
+    },
+    200
+  );
 
   return (
-    <div className={cn("grid gap-2", className)}>
+    <div className={cn('grid gap-2', className)}>
       <Popover>
         <PopoverTrigger asChild>
           <Button
             id="date"
-            variant={"outline"}
+            variant={'outline'}
             className={cn(
-              "w-[50px] h-10 justify-start text-left font-normal",
-              !date && "text-muted-foreground"
+              'w-[50px] h-10 justify-center text-left font-normal relative',
+              !date && 'text-muted-foreground',
+              (isPending || isLoading) && 'opacity-50'
             )}
+            disabled={isPending || isLoading}
           >
-            <CalendarIcon />
-            {/* {date?.from ? (
-              date.to ? (
-                <>
-                  {format(date.from, "LLL dd, y")} -{" "}
-                  {format(date.to, "LLL dd, y")}
-                </>
-              ) : (
-                format(date.from, "LLL dd, y")
-              )
+            {isPending || isLoading ? (
+              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600"></div>
             ) : (
-              <span>Pick a date</span>
-            )} */}
+              <CalendarIcon />
+            )}
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-auto p-0" align="start">

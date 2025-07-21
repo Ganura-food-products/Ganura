@@ -1,18 +1,20 @@
-"use client";
+'use client';
 
-import { FarmerForm, LeaderField } from "@/app/lib/definitions";
-import { UserCircleIcon } from "@heroicons/react/24/outline";
-import Link from "next/link";
-import { Button } from "@/app/ui/button";
-import { FarmerState, updateFarmer } from "@/app/lib/actions";
-import { Autocomplete, AutocompleteItem } from "@nextui-org/autocomplete";
-import { useActionState } from "react";
+import { FarmerForm, LeaderField, SeasonField } from '@/app/lib/definitions';
+import { UserCircleIcon, CalendarDaysIcon } from '@heroicons/react/24/outline';
+import Link from 'next/link';
+import { Button } from '@/app/ui/button';
+import { FarmerState, updateFarmer } from '@/app/lib/actions';
+import { Autocomplete, AutocompleteItem } from '@nextui-org/autocomplete';
+import { useActionState } from 'react';
 
 export default function EditFarmerForm({
   farmer,
   leaders,
+  seasons,
 }: {
   leaders: LeaderField[];
+  seasons: SeasonField[];
   farmer: FarmerForm;
 }) {
   const initialState: FarmerState = { message: null, errors: {} };
@@ -21,7 +23,7 @@ export default function EditFarmerForm({
     updateFarmerWithId,
     initialState
   );
-  console.table(farmer)
+  console.table(farmer);
   return (
     <form action={formAction}>
       <div className="rounded-md bg-gray-50 p-4 md:p-6">
@@ -291,8 +293,6 @@ export default function EditFarmerForm({
             Choose team leader
           </label>
           <div className="relative">
-            
-
             <select
               id="team_leader"
               name="team_leader_id"
@@ -313,6 +313,40 @@ export default function EditFarmerForm({
             <div id="team_leader-error" aria-live="polite" aria-atomic="true">
               {FarmerState.errors?.team_leader_id &&
                 FarmerState.errors.team_leader_id.map((error: string) => (
+                  <p className="mt-2 text-sm text-red-500" key={error}>
+                    {error}
+                  </p>
+                ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Season Selection */}
+        <div className="mb-4">
+          <label htmlFor="season" className="mb-2 block text-sm font-medium">
+            Choose Season
+          </label>
+          <div className="relative">
+            <select
+              id="season"
+              name="season_id"
+              className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
+              defaultValue={farmer.season_id}
+              aria-describedby="season-error"
+            >
+              <option value="" disabled>
+                Select a season
+              </option>
+              {seasons.map((season) => (
+                <option key={season.id} value={season.id}>
+                  {season.name}
+                </option>
+              ))}
+            </select>
+            <CalendarDaysIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
+            <div id="season-error" aria-live="polite" aria-atomic="true">
+              {FarmerState.errors?.season_id &&
+                FarmerState.errors.season_id.map((error: string) => (
                   <p className="mt-2 text-sm text-red-500" key={error}>
                     {error}
                   </p>

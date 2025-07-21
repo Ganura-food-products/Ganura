@@ -1,14 +1,20 @@
 'use client';
 
-import { LeaderField } from '@/app/lib/definitions';
+import { LeaderField, SeasonField } from '@/app/lib/definitions';
 import Link from 'next/link';
-import { UserCircleIcon } from '@heroicons/react/24/outline';
+import { UserCircleIcon, CalendarDaysIcon } from '@heroicons/react/24/outline';
 import { Button } from '@/app/ui/button';
 import { createFarmer, FarmerState } from '@/app/lib/actions';
 import { useActionState } from 'react';
 import { Autocomplete, AutocompleteItem } from '@nextui-org/autocomplete';
 
-export default function Form({ leaders }: { leaders: LeaderField[] }) {
+export default function Form({
+  leaders,
+  seasons,
+}: {
+  leaders: LeaderField[];
+  seasons: SeasonField[];
+}) {
   const initialState: FarmerState = { message: null, errors: {} };
   const [state, formAction] = useActionState(createFarmer, initialState);
   return (
@@ -276,7 +282,6 @@ export default function Form({ leaders }: { leaders: LeaderField[] }) {
               name="team_leader_id"
               placeholder="Choose team leader"
               aria-describedby="team_leader-error"
-              
             >
               {leaders.map((leader) => (
                 <AutocompleteItem key={leader.id} value={leader.name}>
@@ -288,6 +293,36 @@ export default function Form({ leaders }: { leaders: LeaderField[] }) {
             <div id="team_leader-error" aria-live="polite" aria-atomic="true">
               {state.errors?.team_leader_id &&
                 state.errors.team_leader_id.map((error: string) => (
+                  <p className="mt-2 text-sm text-red-500" key={error}>
+                    {error}
+                  </p>
+                ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Season Selection */}
+        <div className="mb-4">
+          <label htmlFor="season" className="mb-2 block text-sm font-medium">
+            Choose Season
+          </label>
+          <div className="relative">
+            <Autocomplete
+              id="season"
+              name="season_id"
+              placeholder="Choose season"
+              aria-describedby="season-error"
+            >
+              {seasons.map((season) => (
+                <AutocompleteItem key={season.id} value={season.name}>
+                  {season.name}
+                </AutocompleteItem>
+              ))}
+            </Autocomplete>
+            <CalendarDaysIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
+            <div id="season-error" aria-live="polite" aria-atomic="true">
+              {state.errors?.season_id &&
+                state.errors.season_id.map((error: string) => (
                   <p className="mt-2 text-sm text-red-500" key={error}>
                     {error}
                   </p>
