@@ -8,7 +8,7 @@ import { updateSeason } from '@/app/lib/actions';
 import { useActionState } from 'react';
 
 export default function EditSeasonForm({ season }: { season: SeasonForm }) {
-  const initialState = { message: null, errors: {} };
+  const initialState = { message: '', errors: {} };
   const updateSeasonWithId = updateSeason.bind(null, season.id);
   const [state, formAction] = useActionState(updateSeasonWithId, initialState);
 

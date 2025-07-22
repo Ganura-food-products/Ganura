@@ -1,20 +1,6 @@
 import { TruckIcon } from '@heroicons/react/24/outline';
 import { lusitana, poppins } from '@/app/ui/fonts';
 import { fetchStockIn } from '@/app/lib/data';
-import { Revenue } from '@/app/lib/definitions';
-
-// Generate Y-axis labels for quantities (without currency formatting)
-const generateQuantityYAxis = (data: Revenue[]) => {
-  const yAxisLabels = [];
-  const highestRecord = Math.max(...data.map((month) => month.revenue));
-  const topLabel = Math.ceil(highestRecord / 1000) * 1000;
-
-  for (let i = topLabel; i >= 0; i -= 1000) {
-    yAxisLabels.push(`${i / 1000}K`);
-  }
-
-  return { yAxisLabels, topLabel };
-};
 
 export default async function StockInChart({
   seasonId,
@@ -30,8 +16,6 @@ export default async function StockInChart({
   const stockInData = await fetchStockIn(seasonId, from, to);
   const chartHeight = 350;
 
-  const { yAxisLabels, topLabel } = generateQuantityYAxis(stockInData);
-
   if (!stockInData || stockInData.length === 0) {
     return (
       <div className="w-full md:col-span-4">
@@ -39,13 +23,17 @@ export default async function StockInChart({
           Recent Stock In
         </h2>
         <div className="rounded-xl bg-gray-50 p-4">
-          <p className="mt-4 text-gray-300 text-center py-8">
+          <p className="mt-4 text-gray-400 text-center py-8">
             No stock-in data available.
           </p>
         </div>
       </div>
     );
   }
+
+  // Calculate the maximum value for proper scaling
+  const maxValue = Math.max(...stockInData.map((month) => month.revenue));
+  const topLabel = Math.ceil(maxValue / 1000) * 1000;
 
   // Map month numbers to month names
   const monthNames = [
