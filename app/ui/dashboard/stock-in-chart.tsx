@@ -39,7 +39,7 @@ export default async function StockInChart({
           Recent Stock In
         </h2>
         <div className="rounded-xl bg-gray-50 p-4">
-          <p className="mt-4 text-gray-400 text-center py-8">
+          <p className="mt-4 text-gray-300 text-center py-8">
             No stock-in data available.
           </p>
         </div>
